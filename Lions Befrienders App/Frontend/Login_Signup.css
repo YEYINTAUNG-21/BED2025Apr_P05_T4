@@ -1,0 +1,128 @@
+/* Base reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0fff2;
+}
+
+/* Logo */
+.logo-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+}
+
+
+.logo {
+  width: 180px;
+  height: auto;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Centered green form box */
+.form-container {
+  background-color: #8bd480;
+  color: #000;
+  padding: 30px;
+  max-width: 350px;
+  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 100px auto;
+  text-align: center;
+}
+
+.green-box {
+  background-color: #8bd480;
+  color: #000;
+}
+
+/* Headings */
+.form-container h2 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.form-container p {
+  margin-bottom: 20px;
+}
+
+/* Form inputs and buttons */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #fff;
+  border: none;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #eeeeee;
+}
+
+.guest-btn {
+  background-color: #f0f0f0;
+}
+
+.small-text {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+/* Avatar on login page */
+.avatar {
+  width: 150px;
+  margin: 10px auto;
+  display: block;
+}
+
+/* "Remember me" checkbox + forgot password link */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.form-row label.remember {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.form-row .forgot {
+  font-size: 13px;
+  text-decoration: none;
+  color: #000;
+  margin: 0;
+}
+
