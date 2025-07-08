@@ -53,6 +53,7 @@ if (loginForm) {
   };
 }
 
+
 // Join hobby groups
 window.onload = () => {
   const groupList = document.getElementById('groupList');
@@ -118,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
 
     const formData = new FormData(form);
+    formData.append('created_by_admin_id', 2); // only for testing
 
     try {
       const response = await fetch('http://localhost:3000/api/hobby-groups', {

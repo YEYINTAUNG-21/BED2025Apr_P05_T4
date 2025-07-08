@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const dbConfig = require('../DB_Configs/db_config');
+const dbConfig = require('../../db_config');
 
 // Create a new user (for signup)
 async function createUser(name, email, password_hash){
