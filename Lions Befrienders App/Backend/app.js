@@ -7,6 +7,7 @@ dotenv.config();
 
 const userController = require('./Controllers/UserController');
 const validateInput = require('./Middleware/ValidateInput');
+const { getHobbyGroups } = require('./Controllers/HobbyGroupController');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,6 +24,8 @@ app.post('/login', validateInput.login, userController.login);
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
 });
+
+app.get('/api/hobby-groups', getHobbyGroups); 
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
