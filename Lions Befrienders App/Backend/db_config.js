@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -6,6 +7,7 @@ module.exports = {
   trustServerCertificate: true,
   options: {
     port: parseInt(process.env.DB_PORT),
+    encrypt: false,
     connectionTimeout: 60000,
   },
 };

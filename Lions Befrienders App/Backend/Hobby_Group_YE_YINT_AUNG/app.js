@@ -1,6 +1,7 @@
 const express = require('express');
 const sql = require('mssql');
 const dotenv = require('dotenv');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const path = require('path');
 const multer = require('multer');
 const cors = require('cors');

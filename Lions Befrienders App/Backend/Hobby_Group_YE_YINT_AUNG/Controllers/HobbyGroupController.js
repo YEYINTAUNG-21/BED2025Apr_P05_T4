@@ -3,6 +3,7 @@ const HobbyGroupModel = require('../Models/HobbyGroupModel');
 async function getHobbyGroups(req, res) {
     try {
         const groups = await HobbyGroupModel.fetchGroupsWithGroupMemberCount();
+          console.log('Fetched groups from DB:', groups);
         res.status(200).json(groups);
     } catch (error) {
         console.error('Error fetching hobby groups:', error);
@@ -11,14 +12,13 @@ async function getHobbyGroups(req, res) {
 }
 async function createHobbyGroup(req, res) {
     try {
-        const {group_name, description, long_description, meetup_date, meetup_time, meetup_location, created_by_admin_id} = req.body;
+        const {group_name, description, meetup_date, meetup_time, meetup_location, created_by_admin_id} = req.body;
         const admin_id = 2; // for testing 
         // const admin_id = req.user.admin_id;
-        const image_url = req.file ? req.file.path : null;
+        const image_url = req.file ? req.file.filename : null;
         await HobbyGroupModel.insertGroup({
             group_name,
             description,
-            long_description,
             image_url,
             meetup_date,
             meetup_time,

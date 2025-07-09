@@ -53,44 +53,38 @@ if (loginForm) {
   };
 }
 
-
 // Join hobby groups
-window.onload = () => {
+window.onload = async () => {
   const groupList = document.getElementById('groupList');
 
-  fetch('/api/hobby-groups') // This should be your real backend endpoint
-    .then(response => response.json())
-    .then(groups => {
-      groups.forEach(group => {
-        const card = document.createElement('div');
-        card.className = 'group-card';
-        card.innerHTML = `
-          <img src="${group.image_url}" alt="${group.group_name}">
-          <h3>${group.group_name}</h3>
-          <p>${group.description}</p>
-          <p>${group.members} members</p>
-          <button class="join-btn">Join Group</button>
-        `;
+  try {
+    const response = await fetch('http://localhost:3000/api/hobby-groups');
+    const groups = await response.json();
+    console.log('Loaded groups:', groups);
 
-        card.style.cursor = "pointer";
-        card.addEventListener('click', () => {
-          window.location.href = `hobby-detail.html?group_id=${group.group_id}`;
-        });
+    groupList.innerHTML = ''; 
 
-        const joinButton = card.querySelector('.join-btn');
-        joinButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          alert(`Joining: ${group.group_name}`);
-        });
+    groups.forEach(group => {
+      const card = document.createElement('div');
+      card.className = 'group-card';
 
-        groupList.appendChild(card);
-      });
-    })
-    .catch(error => {
-      console.error('Error loading groups:', error);
-      groupList.innerHTML = '<p>Failed to load groups.</p>';
+      card.innerHTML = `
+        <img src="Images/${group.image_url}" alt="${group.group_name}">
+        <h3>${group.group_name}</h3>
+        <p>${group.description}</p>
+        <p>${group.members} members</p>
+        <button class="join-btn">Join Group</button>
+      `;
+
+      groupList.appendChild(card);
     });
+
+  } catch (error) {
+    console.error('Error loading groups:', error);
+    groupList.innerHTML = 'Failed to load groups.';
+  }
 };
+
 
 /* Create hobby */
 
@@ -120,6 +114,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formData = new FormData(form);
     formData.append('created_by_admin_id', 2); // only for testing
+
+    const rawTime = formData.get('meetup_time');
+      if (rawTime && rawTime.length === 5) {
+        formData.set('meetup_time', rawTime + ':00'); 
+    } 
 
     try {
       const response = await fetch('http://localhost:3000/api/hobby-groups', {

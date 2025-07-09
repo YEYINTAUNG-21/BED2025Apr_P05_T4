@@ -28,7 +28,6 @@ async function insertGroup(groupData) {
     const {
         group_name,
         description,
-        long_description,
         image_url,
         meetup_date,
         meetup_time,
@@ -40,15 +39,14 @@ async function insertGroup(groupData) {
     await connection.request()
         .input('group_name', sql.NVarChar, group_name)
         .input('description', sql.NVarChar, description)
-        .input('long_description', sql.NVarChar, long_description)
         .input('image_url', sql.NVarChar, image_url)
         .input('meetup_date', sql.Date, meetup_date)
-        .input('meetup_time', sql.Time, meetup_time)
+        .input('meetup_time', sql.Time, new Date(`1970-01-01T${meetup_time}`))
         .input('meetup_location', sql.NVarChar, meetup_location)
         .input('created_by_admin_id', sql.Int, created_by_admin_id)
         .query(`
-            INSERT INTO HobbyGroups (group_name, description, long_description, image_url, meetup_date, meetup_time, meetup_location, created_by_admin_id)
-            VALUES (@group_name, @description, @long_description, @image_url, @meetup_date, @meetup_time, @meetup_location, @created_by_admin_id);
+            INSERT INTO HobbyGroups (group_name, description, image_url, meetup_date, meetup_time, meetup_location, created_by_admin_id)
+            VALUES (@group_name, @description, @image_url, @meetup_date, @meetup_time, @meetup_location, @created_by_admin_id);
         `);
 }
 
