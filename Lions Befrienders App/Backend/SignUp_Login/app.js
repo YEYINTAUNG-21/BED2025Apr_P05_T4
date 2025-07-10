@@ -1,7 +1,9 @@
 const express = require('express');
 const sql = require('mssql');
 const dotenv = require('dotenv');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const path = require('path');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -13,12 +15,13 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.use(express.static(path.join(__dirname, '..', 'Frontend')));
-console.log('Serving static from:', path.join(__dirname, '..', 'Frontend'));
+app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
+console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
-app.post('/signup', validateInput.signup, userController.signup);
-app.post('/login', validateInput.login, userController.login);
+app.post('/api/signup', validateInput.signup, userController.signup);
+app.post('/api/login', validateInput.login, userController.login);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');

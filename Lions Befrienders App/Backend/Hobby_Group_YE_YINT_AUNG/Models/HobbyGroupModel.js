@@ -1,5 +1,6 @@
 const sql = require('mssql');
 const dbConfig = require('../../db_config');
+const Joi = require('joi');
 
 async function fetchGroupsWithGroupMemberCount(){
     let connection;
@@ -50,7 +51,68 @@ async function insertGroup(groupData) {
         `);
 }
 
+async function fetchGroupById(group_id) {
+    const connection = await sql.connect(dbConfig);
+    const result = await connection.request()   
+        .input('group_id', sql.Int, group_id)
+        .query(`
+            SELECT * FROM HobbyGroups WHERE group_id = @group_id
+        `);
+        return result.recordset[0];
+}
+
+async function fetchGroupMember(group_id){
+    const connection = await sql.connect(dbConfig);
+    const result = await connection.request()
+        .input('group_id', sql.Int, group_id)
+        .query(`
+            SELECT gm.*, u.name 
+            FROM GroupMembers gm
+            JOIN Users u ON gm.user_id = u.user_id
+            WHERE gm.group_id = @group_id`
+        );
+        return result.recordset;
+}
+
+async function joinGroup({group_id, user_id, nickname_in_group }){
+    const connection = await sql.connect(dbConfig);
+    await connection.request()
+        .input('group_id', sql.Int, group_id)
+        .input('user_id', sql.Int, user_id)
+        .input('nickname_in_group', sql.NVarChar, nickname_in_group)
+        .query(`
+            INSERT INTO GroupMembers (group_id, user_id, nickname_in_group)
+            VALUES (@group_id, @user_id, @nickname_in_group)
+            `);
+}
+
+async function updateNickname(member_id, nickname_in_group) {
+    const connection = await sql.connect(dbConfig);
+    await connection.request()
+        .input('member_id', sql.Int, member_id)
+        .input('nickname_in_group', sql.NVarChar, nickname_in_group)
+        .query(`
+            UPDATE GroupMembers
+            SET nickname_in_group = @nickname_in_group
+            WHERE member_id = @member_id
+        `);
+}
+
+async function leaveGroup(member_id,  user_id){
+    const connection = await sql.connect(dbConfig);
+    await connection.request()
+        .input('member_id', sql.Int, member_id)
+        .query(`
+            DELETE FROM GroupMembers
+            WHERE member_id = @member_id
+        `)
+}
 module.exports = {
     fetchGroupsWithGroupMemberCount,
-    insertGroup
+    insertGroup,
+    fetchGroupById,
+    fetchGroupMember,
+    joinGroup,
+    updateNickname,
+    leaveGroup
 };

@@ -26,6 +26,13 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
+// User auth
+app.post('/api/signup', validateInput.signup, UserController.signup);
+app.post('/api/login', validateInput.login, UserController.login);
+
+// Admin login (future)
+// app.post('/admin/login', AdminController.login); 
+
 // Multer storage setup for file upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -37,18 +44,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Routes
+// Hobby Group
 app.get('/api/hobby-groups', HobbyGroupController.getHobbyGroups);
-
-// TEMP: No auth middleware for now
 app.post('/api/hobby-groups', upload.single('groupImage'), HobbyGroupController.createHobbyGroup);
+app.get('/api/hobby-groups/:id', HobbyGroupController.getHobbyGroupById);
+app.get('/api/group-members/:group_id', HobbyGroupController.getGroupMember);
+app.post('/api/group-members', HobbyGroupController.joinGroup);
+app.put('/api/group-members/:member_id', HobbyGroupController.updateNickname);
+app.delete('/api/group-members/:member_id', HobbyGroupController.leaveGroup);
 
-// User auth
-app.post('/signup', validateInput.signup, UserController.signup);
-app.post('/login', validateInput.login, UserController.login);
-
-// Admin login (future)
-// app.post('/admin/login', AdminController.login); 
 
 // Home
 app.get('/', (req, res) => {
