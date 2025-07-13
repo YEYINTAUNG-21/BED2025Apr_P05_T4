@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const sql = require('mssql');
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config();
+
 
 const userController = require('./Controllers/UserController');
 const validateInput = require('./Middleware/ValidateInput');
@@ -17,8 +19,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '..', 'Frontend'));
 
-app.post('/signup', validateInput.signup, userController.signup);
-app.post('/login', validateInput.login, userController.login);
+app.post('/signup',  userController.signup);
+app.post('/login', userController.login);
+app.get("/users", userController.getAllUsers); // Get all users
+app.get("/users/:id", userController.getUserById); // Get user by ID
+app.delete("/users/:id", userController.deleteUserAccount); // Delete user
+
+
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
