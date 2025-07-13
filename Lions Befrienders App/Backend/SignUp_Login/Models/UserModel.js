@@ -1,29 +1,7 @@
 const sql = require('mssql');
 const dbConfig = require('../../db_config');
 console.log('Connecting to DB with config:', dbConfig)
-// Create a new user (for signup)
-// async function createUser(name, email, password_hash){
-//     let connection;
-//     try {
-//         connection = await sql.connect(dbConfig);
-//         await connection.request()
-//             .input('name', sql.VarChar(100), name)
-//             .input('email', sql.VarChar(100), email)
-//             .input('password_hash', sql.VarChar(255), password_hash)
 
-//             .query(`
-//                 INSERT INTO Users (name, email, password_hash)
-//                 VALUES (@name, @email, @password_hash)
-//             `);
-//     } catch (error) {
-//         console.error('Error creating user:', error);
-//         throw error;
-//     } finally {
-//         if (connection) {
-//             await connection.close();
-//         }
-//     }
-// }
 
 async function getAllUsers(){
     let connection;
@@ -65,9 +43,7 @@ async function getUserById(id){
         if (result.recordset.length === 0) {
             return null; // Book not found
         }
-        console.log('Result object from createUser query (after OUTPUT):', JSON.stringify(result, null, 2));
-        console.log('Result recordset (singular):', result.recordset);
-        console.log('Result recordsets (plural):', result.recordsets); // Check this very carefully!
+        
         return result.recordset[0];
     }
     catch(error){
@@ -115,11 +91,7 @@ async function createUser({full_name, email, phone_number, password_hash, date_o
 
         
         const insertResult = await request.query(query);
-        // console.log('Result object from createUser query (after OUTPUT):', JSON.stringify(result, null, 2));
-        // console.log('Result recordset (singular):', result.recordset);
-        // console.log('Result recordsets (plural):', result.recordsets); // Check this very carefully!
-        // return result.recordsets[0];
-
+       
         // --- Start Debugging Logs ---
     console.log('Result from INSERT query (rowsAffected):', insertResult.rowsAffected);
     // --- End Debugging Logs ---
@@ -209,11 +181,7 @@ async function getUserByPhoneNumber(phoneNumber) {
 }
 
 
-/**
- * Deletes a user from the database.
- * @param {number} userId - The ID of the user to delete.
- * @returns {Promise<boolean>} True if the user was deleted, false otherwise.
- */
+
 async function deleteUser(userId) {
     let connection;
     try {
