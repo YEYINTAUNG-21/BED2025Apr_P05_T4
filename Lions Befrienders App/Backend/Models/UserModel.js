@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const dbConfig = require('../DB_Configs/db_config');
+const dbConfig = require('../dbConfig');
 
 // Create a new user (for signup)
 async function createUser(name, email, password_hash){
@@ -9,11 +9,11 @@ async function createUser(name, email, password_hash){
         await connection.request()
             .input('name', sql.VarChar(100), name)
             .input('email', sql.VarChar(100), email)
-            .input('password_hash', sql.VarChar(255), password_hash)
+            .input('password', sql.VarChar(255), password_hash)
 
             .query(`
-                INSERT INTO Users (name, email, password_hash)
-                VALUES (@name, @email, @password_hash)
+                INSERT INTO Users (full_name, email, password)
+                VALUES (@name, @email, @password)
             `);
     } catch (error) {
         console.error('Error creating user:', error);

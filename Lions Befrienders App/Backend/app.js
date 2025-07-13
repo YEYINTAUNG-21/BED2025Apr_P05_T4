@@ -5,27 +5,28 @@ const path = require('path');
 
 dotenv.config();
 
-const userController = require('./Controllers/UserController');
-const validateInput = require('./Middleware/ValidateInput');
 const { getHobbyGroups } = require('./Controllers/HobbyGroupController');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, '..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '..', 'Frontend'));
 
-app.post('/signup', validateInput.signup, userController.signup);
-app.post('/login', validateInput.login, userController.login);
-
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
 });
 
-app.get('/api/hobby-groups', getHobbyGroups); 
+app.get('/api/hobby-groups', getHobbyGroups);
+
+const emergencyRoutes = require('./routes/emergencyRoutes');
+app.use('/', emergencyRoutes);
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/', authRoutes); // This handles /login and /signup with validation middleware
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

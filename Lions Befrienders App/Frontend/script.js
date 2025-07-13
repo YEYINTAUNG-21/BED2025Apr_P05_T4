@@ -1,4 +1,4 @@
-// Signup handler
+// Signup handler 
 const signupForm = document.getElementById('signupForm');
 if (signupForm) {
   signupForm.onsubmit = async function (e) {
@@ -24,33 +24,39 @@ if (signupForm) {
       alert(data.message || data.error);
     }
   };
-}
+} 
 
 // Login handler
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
   loginForm.onsubmit = async function (e) {
     e.preventDefault();
+    console.log('[DEBUG] Login form submitted');
 
-    const res = await fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: this.querySelector('[name="email"]').value,
-        password: this.querySelector('[name="password"]').value
-      })
-    });
+    const email = loginForm.querySelector('[name="email"]').value;
+    const password = loginForm.querySelector('[name="password"]').value;
 
-    const data = await res.json();
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    if (res.ok) {
-      alert('Login successful!');
-      localStorage.setItem('token', data.token);
-      window.location.href = '/homepage.html'; 
-    } else {
-      alert(data.error || 'Login failed');
+      const data = await res.json();
+      console.log('[DEBUG] Server response:', data);
+
+      if (res.ok) {
+        alert('Login successful!');
+        localStorage.setItem('token', data.token);
+        window.location.href = '/emergency.html';
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('[ERROR] Login fetch failed:', error);
     }
-  };
+  }
 }
 
 // Join hobby groups
@@ -92,7 +98,6 @@ window.onload = () => {
 };
 
 /* Create hobby */
-
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('createHobbyForm');
   const imageInput = document.getElementById('groupImage');
@@ -140,5 +145,224 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const emergencyBtn = document.getElementById('emergencyBtn');
+  const logList = document.getElementById('logList');
+
+  // Create: Trigger emergency
+  if (emergencyBtn) {
+    emergencyBtn.addEventListener('click', async () => {
+      const confirmed = confirm("Are you sure this is a real emergency?");
+      if (!confirmed) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/emergency-alert', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({})
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert('Emergency alert sent!');
+          loadLogs(); // reload logs
+        } else {
+          alert('Failed: ' + (data.message || 'Unknown error'));
+        }
+      } catch (error) {
+        alert('Error sending emergency alert.');
+        console.error(error);
+      }
+    });
+  }
+
+  // Read: Load logs
+  async function loadLogs() {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/admin/emergency-logs', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const logs = await res.json();
+
+      logList.innerHTML = '';
+
+      if (!Array.isArray(logs) || logs.length === 0) {
+        logList.innerHTML = '<p>No emergency logs found.</p>';
+        return;
+      }
+
+      logs.forEach(log => {
+        const logItem = document.createElement('div');
+        logItem.className = 'log-item';
+        logItem.style.background = '#fff';
+        logItem.style.border = '1px solid #ddd';
+        logItem.style.padding = '15px';
+        logItem.style.marginBottom = '10px';
+        logItem.style.borderRadius = '8px';
+
+        logItem.innerHTML = `
+          <p><strong>Status:</strong> ${log.status}</p>
+          <p><strong>Time:</strong> ${new Date(log.timestamp).toLocaleString()}</p>
+          <button onclick="deleteLog(${log.log_id})" style="margin-right: 10px;">Delete</button>
+          <button onclick="updateLog(${log.log_id})">Mark as Resolved</button>
+        `;
+
+        logList.appendChild(logItem);
+      });
+    } catch (err) {
+      console.error('Error loading logs:', err);
+      logList.innerHTML = '<p>Failed to load emergency logs.</p>';
+    }
+  }
+
+  // Delete log
+  window.deleteLog = async function (logId) {
+    if (!confirm('Are you sure you want to delete this log?')) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/admin/emergency-logs/${logId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      loadLogs();
+    } catch (err) {
+      console.error('Delete failed:', err);
+    }
+  };
+
+  // Update log status
+  window.updateLog = async function (logId) {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`/admin/emergency-logs/${logId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: 'Resolved' })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+      loadLogs();
+    } catch (err) {
+      console.error('Update failed:', err);
+    }
+  };
+
+  loadLogs(); // Initial load
+});
 
 
+// js for admin dashboard
+document.addEventListener('DOMContentLoaded', async () => {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert('Admin not logged in.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/admin/emergency-logs', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const logs = await res.json();
+    const tbody = document.querySelector('#logsTable tbody');
+
+    logs.forEach(log => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${log.log_id}</td>
+        <td>${log.user_id}</td>
+        <td>${new Date(log.timestamp).toLocaleString()}</td>
+        <td><input type="text" value="${log.status || ''}" id="status-${log.log_id}"></td>
+        <td><button onclick="updateLog(${log.log_id})">Update</button></td>
+        <td><button onclick="deleteLog(${log.log_id})">Delete</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (error) {
+    console.error('Failed to load logs:', error);
+  }
+});
+
+async function updateLog(logId) {
+  const token = localStorage.getItem('token');
+  const newStatus = document.getElementById(`status-${logId}`).value;
+
+  try {
+    const res = await fetch(`/admin/emergency-logs/${logId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    const data = await res.json();
+    alert(data.message || 'Log updated');
+  } catch (error) {
+    console.error('Error updating log:', error);
+  }
+}
+
+async function deleteLog(logId) {
+  const token = localStorage.getItem('token');
+  const confirmDelete = confirm('Are you sure you want to delete this log?');
+
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`/admin/emergency-logs/${logId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const data = await res.json();
+    alert(data.message || 'Log deleted');
+    location.reload(); // Refresh the table
+  } catch (error) {
+    console.error('Error deleting log:', error);
+  }
+}
+
+// Show admin dashboard button if user is admin
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('token');
+  const adminBtn = document.getElementById('adminDashboardBtn');
+
+  if (token && adminBtn) {
+    const payload = parseJwt(token);
+    if (payload?.role === 'admin') {
+      adminBtn.style.display = 'inline-block';
+      adminBtn.addEventListener('click', () => {
+        window.location.href = '/admin-dashboard.html';
+      });
+    }
+  }
+});
