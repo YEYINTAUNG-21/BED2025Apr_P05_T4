@@ -72,10 +72,15 @@ async function signup(req, res) {
       address
     } = req.body;
 
-    // 1. Email uniqueness
+    // 1. Email and phone numver uniqueness
     const existing = await UserModel.getUserByEmail(email);
     if (existing) {
       return res.status(400).json({ message: 'Email already registered' });
+    }
+
+    const existingUserByPhone = await UserModel.getUserByPhoneNumber(phone_number); // Assuming you'll create this model function
+    if (existingUserByPhone) {
+      return res.status(409).json({ message: 'Phone number already registered.' });
     }
 
     // 2. Hash password
@@ -104,7 +109,7 @@ async function signup(req, res) {
       message: 'Signup successful',
       token,
        user: {
-        id: newUser.user_id,
+        user_id: newUser.user_id,
         full_name: newUser.full_name,
         email: newUser.email,
         phone_number: newUser.phone_number,

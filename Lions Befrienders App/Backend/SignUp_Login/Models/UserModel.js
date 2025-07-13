@@ -177,7 +177,36 @@ async function getUserByEmail(email) {
     }
 }
 
-
+async function getUserByPhoneNumber(phoneNumber) {
+    let connection
+    try {
+        connection = await sql.connect(dbConfig);
+        const request = connection.request();
+        request.input('phone_number', sql.VarChar(20), phoneNumber); // Ensure type and length match DB schema
+        const result = await request.query(`
+            SELECT
+                user_id,
+                full_name,
+                email,
+                phone_number,
+                password_Hash,
+                date_of_birth,
+                gender,
+                language,
+                address,
+                created_Time
+            FROM users
+            WHERE phone_number = @phone_number;
+        `);
+        if (result.recordset && result.recordset.length > 0) {
+            return result.recordset[0];
+        }
+        return null; // User not found
+    } catch (err) {
+        console.error("Error in UserModel.getUserByPhoneNumber:", err);
+        throw err;
+    }
+}
 
 
 /**
@@ -211,6 +240,7 @@ module.exports = {
     getUserById,
     createUser,
     getUserByEmail,
+    getUserByPhoneNumber,
     deleteUser
 
 }
