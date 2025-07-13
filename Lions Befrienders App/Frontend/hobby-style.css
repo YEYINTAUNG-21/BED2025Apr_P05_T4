@@ -113,6 +113,31 @@ h2 {
   background-color: #555;
 }
 
+.top-bar {
+  position: absolute;
+  top: 23px;
+  right: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.create-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background-color: #218838;
+}
+
+
 /* Create Hobby Group */
 .create-hobby-container {
   max-width: 1000px;
@@ -213,6 +238,129 @@ h3 {
   font-size: 16px;
   cursor: pointer;
   border-radius: 6px;
+}
+
+/* Hobby Detail Page */
+.group-detail {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.group-detail h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.group-detail h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.group-detail .back-button {
+  margin-top: 30px;
+}
+
+.group-img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.members-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.member-list {
+  list-style: none;
+  padding: 0;
+}
+
+.member-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #eef;
+  border-radius: 6px;
+}
+
+.dots-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Modal Styling */
+.modal.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.close {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#leaveButton {
+  background-color: #e74c3c; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#leaveButton:hover {
+  background-color: #c0392b;
+}
+
+#saveNickname {
+  background-color: #3498db; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 
