@@ -4,7 +4,7 @@ if (signupForm) {
   signupForm.onsubmit = async function (e) {
     e.preventDefault();
 
-    const res = await fetch('/signup', {
+    const res = await fetch('http://localhost:3000/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -32,7 +32,7 @@ if (loginForm) {
   loginForm.onsubmit = async function (e) {
     e.preventDefault();
 
-    const res = await fetch('/login', {
+    const res = await fetch('http://localhost:3000/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -53,20 +53,20 @@ if (loginForm) {
   };
 }
 
-// Join hobby groups
+// hobby groups
 window.onload = async () => {
   const groupList = document.getElementById('groupList');
 
   try {
     const response = await fetch('http://localhost:3000/api/hobby-groups');
     const groups = await response.json();
-    console.log('Loaded groups:', groups);
 
     groupList.innerHTML = ''; 
 
     groups.forEach(group => {
-      const card = document.createElement('div');
+      const card = document.createElement('a');
       card.className = 'group-card';
+      card.href = `hobby-detail.html?group_id=${group.group_id}`;
 
       card.innerHTML = `
         <img src="Images/${group.image_url}" alt="${group.group_name}">
@@ -87,7 +87,6 @@ window.onload = async () => {
 
 
 /* Create hobby */
-
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('createHobbyForm');
   const imageInput = document.getElementById('groupImage');
@@ -142,4 +141,136 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+// Group detail page
+document.addEventListener("DOMContentLoaded", () => {
+  const groupId = new URLSearchParams(window.location.search).get("group_id");
+  const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+  let currentMemberId = null;
 
+  const joinBtn = document.getElementById("joinButton");
+  const leaveBtn = document.getElementById("leaveButton");
+
+  // Load group detail
+  fetch(`http://localhost:3000/api/hobby-groups/${groupId}`)
+    .then(res => res.json())
+    .then(group => {
+      document.getElementById("groupImage").src = `Images/${group.image_url}`;
+      document.getElementById("groupName").textContent = group.group_name;
+      document.getElementById("groupDescription").textContent = group.description;
+      document.getElementById("meetupDate").textContent = new Date(group.meetup_date).toLocaleDateString();
+      const rawTime = group.meetup_time;
+      const timeOnly = new Date(rawTime).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+      });
+      document.getElementById("meetupTime").textContent = timeOnly;
+      document.getElementById("meetupLocation").textContent = group.meetup_location;
+    });
+
+  // Fetch and display members
+  function loadMembers() {
+  fetch(`http://localhost:3000/api/group-members/${groupId}`)
+    .then(res => res.json())
+    .then(members => {
+      console.log("Fetched members:", members);
+
+      if (!Array.isArray(members)) {
+        console.error("Expected members to be an array but got:", members);
+        return;
+      }
+
+      const list = document.getElementById("memberList");
+      list.innerHTML = "";
+
+      const currentUser = members.find(m => m.user_id === loginUser.user_id);
+      currentMemberId = currentUser ? currentUser.member_id : null;
+
+      // Toggle join/leave button
+      if (currentMemberId) {
+        joinBtn.classList.add("hidden");
+        leaveBtn.classList.remove("hidden");
+      } else {
+        joinBtn.classList.remove("hidden");
+        leaveBtn.classList.add("hidden");
+      }
+
+      // Show members
+      members.forEach(member => {
+        const li = document.createElement("li");
+        li.className = "member-list-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = member.nickname_in_group || member.name;
+        li.appendChild(nameSpan);
+
+        // Edit button for current user
+        if (member.user_id === loginUser.user_id) {
+          const dotBtn = document.createElement("button");
+          dotBtn.className = "dots-button";
+          dotBtn.innerHTML = "&#8942;";
+          dotBtn.onclick = () => {
+            currentMemberId = member.member_id;
+            document.getElementById("nicknameModal").classList.remove("hidden");
+          };
+          li.appendChild(dotBtn);
+        }
+
+        list.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("Error fetching members:", err);
+    });
+}
+
+
+  // Join group
+  joinBtn.addEventListener("click", () => {
+    fetch("http://localhost:3000/api/group-members", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        group_id: parseInt(groupId),
+        user_id: loginUser.user_id,
+        nickname_in_group: loginUser.name
+      })
+    })
+    .then(res => res.json())
+    .then(() => loadMembers());
+  });
+
+  // Leave group
+  leaveBtn.addEventListener("click", () => {
+    if (!currentMemberId) return;
+    fetch(`http://localhost:3000/api/group-members/${currentMemberId}`, {
+      method: "DELETE"
+    })
+    .then(() => {
+      currentMemberId = null;
+      loadMembers();
+    });
+  });
+
+  // Nickname modal: Close
+  document.getElementById("closeModal").addEventListener("click", () => {
+    document.getElementById("nicknameModal").classList.add("hidden");
+  });
+
+  // Nickname modal: Save
+  document.getElementById("saveNickname").addEventListener("click", () => {
+    const newNick = document.getElementById("newNickname").value;
+    fetch(`http://localhost:3000/api/group-members/${currentMemberId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nickname_in_group: newNick })
+    })
+    .then(() => {
+      document.getElementById("nicknameModal").classList.add("hidden");
+      document.getElementById("newNickname").value = "";
+      loadMembers();
+    });
+  });
+
+  loadMembers(); // initial load
+});
