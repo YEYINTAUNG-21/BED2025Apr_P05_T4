@@ -9,13 +9,17 @@ const cors = require('cors');
 
 
 
+<<<<<<< HEAD:Lions Befrienders App/Backend/app.js
+const { getHobbyGroups } = require('./Controllers/HobbyGroupController');
+=======
 const userController = require('./Controllers/UserController');
 const validateInput = require('./Middleware/ValidateInput');
+>>>>>>> fc6769bf7eae23a57a9f2eb5749306b946a1e552:Lions Befrienders App/Backend/SignUp_Login/app.js
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
@@ -29,11 +33,25 @@ app.get("/users/:id", userController.getUserById); // Get user by ID
 app.delete("/users/:id", userController.deleteUserAccount); // Delete user
 
 
+<<<<<<< HEAD:Lions Befrienders App/Backend/app.js
+=======
 
+>>>>>>> fc6769bf7eae23a57a9f2eb5749306b946a1e552:Lions Befrienders App/Backend/SignUp_Login/app.js
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
 });
 
+<<<<<<< HEAD:Lions Befrienders App/Backend/app.js
+app.get('/api/hobby-groups', getHobbyGroups);
+
+const emergencyRoutes = require('./routes/emergencyRoutes');
+app.use('/', emergencyRoutes);
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/', authRoutes); // This handles /login and /signup with validation middleware
+
+=======
+>>>>>>> fc6769bf7eae23a57a9f2eb5749306b946a1e552:Lions Befrienders App/Backend/SignUp_Login/app.js
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

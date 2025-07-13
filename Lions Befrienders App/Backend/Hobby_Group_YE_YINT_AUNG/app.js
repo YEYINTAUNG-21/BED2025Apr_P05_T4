@@ -27,8 +27,8 @@ app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
 // User auth
-app.post('/api/signup', validateInput.signup, UserController.signup);
-app.post('/api/login', validateInput.login, UserController.login);
+app.post('/api/signup', validateInput.validateSignupData, UserController.signup);
+app.post('/api/login', validateInput.validateSignupData, UserController.login);
 
 // Admin login (future)
 // app.post('/admin/login', AdminController.login); 

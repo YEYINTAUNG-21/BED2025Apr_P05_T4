@@ -66,9 +66,9 @@ async function fetchGroupMember(group_id){
     const result = await connection.request()
         .input('group_id', sql.Int, group_id)
         .query(`
-            SELECT gm.*, u.name 
+            SELECT gm.*, u.full_name 
             FROM GroupMembers gm
-            JOIN Users u ON gm.user_id = u.user_id
+            JOIN users u ON gm.user_id = u.user_id
             WHERE gm.group_id = @group_id`
         );
         return result.recordset;
