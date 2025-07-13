@@ -1,4 +1,9 @@
 const MedicalRecordModel = require('../Models/MedicalRecordModel');
+const { logRequest, isAdmin } = require('./Middlewares/medicalRecordMiddleware');
+
+const app = express();
+app.use(express.json());
+app.use(logRequest);
 
 // Get all medical records
 async function getAllMedicalRecords(req, res) {
