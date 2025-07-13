@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         li.className = "member-list-item";
 
         const nameSpan = document.createElement("span");
-        nameSpan.textContent = member.nickname_in_group || member.name;
+        nameSpan.textContent = member.nickname_in_group || member.full_name;
         li.appendChild(nameSpan);
 
         // Edit button for current user
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify({
         group_id: parseInt(groupId),
         user_id: loginUser.user_id,
-        nickname_in_group: loginUser.name
+        nickname_in_group: loginUser.full_name
       })
     })
     .then(res => res.json())
