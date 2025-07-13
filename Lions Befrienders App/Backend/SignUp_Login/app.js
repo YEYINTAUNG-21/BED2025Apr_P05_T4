@@ -22,8 +22,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
-app.post('/api/signup', validateInput.signup, userController.signup);
-app.post('/api/login', validateInput.login, userController.login);
+app.post('/api/signup', validateInput.validateSignupData, userController.signup);
+app.post('/api/login', validateInput.validateLoginData, userController.login);
 app.get("/users", userController.getAllUsers); // Get all users
 app.get("/users/:id", userController.getUserById); // Get user by ID
 app.delete("/users/:id", userController.deleteUserAccount); // Delete user
