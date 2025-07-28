@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
-app.get("/doctor", DoctorController.getAllDoctors); 
+app.get("/doctors", DoctorController.getAllDoctors); 
 app.get("/doctor/:id", DoctorController.getDoctorById); 
 app.put("/doctor/:id", DoctorController.updateDoctor); 
 
@@ -34,7 +34,9 @@ app.post("/appointment",AppointmentController.createAppointment);
 app.put("/appointment/:id", DoctorController.updateDoctor); 
 app.delete("/appointment/:id",AppointmentController.deleteAppointment);
 
-
+app.get("/availability/:id",DoctorController.getAvailbilityByDoctorId);
+app.get("/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
+app.get("/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');

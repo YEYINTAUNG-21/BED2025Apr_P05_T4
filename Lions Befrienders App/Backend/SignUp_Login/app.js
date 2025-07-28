@@ -9,7 +9,7 @@ const cors = require('cors');
 
 
 
-const { getHobbyGroups } = require('./Controllers/HobbyGroupController');
+const { getHobbyGroups } = require('../Hobby_Group_YE_YINT_AUNG/Controllers/HobbyGroupController');
 const userController = require('./Controllers/UserController');
 const validateInput = require('./Middleware/ValidateInput');
 

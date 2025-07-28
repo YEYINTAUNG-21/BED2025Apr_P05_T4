@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for better scrolling */
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 600px;
+        }
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background-color: #e0f2fe; /* Light blue background */
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .doctor-img {
+            width: 96px; /* w-24 */
+            height: 96px; /* h-24 */
+            border-radius: 9999px; /* rounded-full */
+            object-fit: cover;
+            border: 3px solid #90cdf4; /* blue-300 */
+        }
+        .time-slot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid */
+            gap: 12px; /* gap-3 */
+            margin-top: 16px;
+        }
+        .time-slot-button {
+            padding: 10px 16px; /* px-4 py-2 */
+            border-radius: 8px; /* rounded-lg */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            border: none;
+        }
+        .time-slot-button.available {
+            background-color: #3b82f6; /* blue-600 */
+            color: #ffffff;
+        }
+        .time-slot-button.available:hover {
+            background-color: #2563eb; /* blue-700 */
+        }
+        .time-slot-button.selected {
+            background-color: #1d4ed8; /* blue-800 */
+            color: #ffffff;
+            border: 2px solid #bfdbfe; /* blue-200 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .time-slot-button.booked {
+            background-color: #d1d5db; /* gray-300 */
+            color: #6b7280; /* gray-600 */
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+        }
+        .time-slot-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 */
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: #374151; /* gray-700 */
+        }
+        .form-group input,
+        .form-group textarea {
+            display: block;
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 6px; /* rounded-md */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+            color: #1f2937; /* gray-900 */
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #10b981; /* emerald-500 */
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-submit:hover {
+            background-color: #059669; /* emerald-600 */
+        }
+        .btn-submit:disabled {
+            background-color: #a7f3d0; /* emerald-200 */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .message-box {
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .message-box.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+        }
+        .message-box.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Book Appointment</h1>
+
+        <!-- Doctor Info Section -->
+        <div id="doctor-info" class="doctor-info">
+            <!-- Doctor image and name will be loaded here by JavaScript -->
+            <img id="doctor-img" src="" alt="Doctor Image" class="doctor-img" onerror="this.onerror=null;this.src='https://placehold.co/96x96/cccccc/000000?text=No+Image';">
+            <div>
+                <h2 id="doctor-name" class="text-2xl font-semibold text-gray-900"></h2>
+                <p id="doctor-details" class="text-blue-700"></p>
+            </div>
+        </div>
+
+        <!-- Date Selection -->
+        <div class="form-group">
+            <label for="appointment-date">Select Date:</label>
+            <input type="date" id="appointment-date" class="form-control" min="">
+        </div>
+
+        <!-- Available Time Slots -->
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Available Time Slots:</h3>
+        <div id="loading-slots" class="text-center text-gray-600 hidden">Loading slots...</div>
+        <div id="no-slots-message" class="text-center text-gray-600 hidden">Please select a date to view availability.</div>
+        <div id="time-slots-container" class="time-slot-grid">
+            <!-- Time slots will be loaded here by JavaScript -->
+        </div>
+        <div id="slot-selection-message" class="text-center text-red-500 mt-4 hidden">Please select a time slot.</div>
+
+
+        <!-- Appointment Form -->
+        <form id="appointment-form" class="mt-8">
+            <div class="form-group">
+                <label for="reason">Reason for Appointment:</label>
+                <textarea id="reason" rows="4" class="form-control" placeholder="Briefly describe the reason for your visit..." required></textarea>
+            </div>
+
+            <!-- Hidden inputs for data that comes from URL or selection -->
+            <input type="hidden" id="doctor-id">
+            <input type="hidden" id="selected-slot-time">
+            <input type="hidden" id="user-id"> <!-- Placeholder for user_id -->
+
+            <button type="submit" id="submit-btn" class="btn-submit" disabled>Book Appointment</button>
+        </form>
+
+        <!-- Message Box for feedback -->
+        <div id="message-box" class="message-box hidden"></div>
+    </div>
+
+    <script>
+        // Get references to DOM elements
+        const doctorInfoDiv = document.getElementById('doctor-info');
+        const doctorImg = document.getElementById('doctor-img');
+        const doctorName = document.getElementById('doctor-name');
+        const doctorDetails = document.getElementById('doctor-details');
+        const appointmentDateInput = document.getElementById('appointment-date');
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        const loadingSlots = document.getElementById('loading-slots');
+        const noSlotsMessage = document.getElementById('no-slots-message');
+        const slotSelectionMessage = document.getElementById('slot-selection-message');
+        const selectedSlotTimeInput = document.getElementById('selected-slot-time');
+        const reasonInput = document.getElementById('reason');
+        const submitBtn = document.getElementById('submit-btn');
+        const appointmentForm = document.getElementById('appointment-form');
+        const messageBox = document.getElementById('message-box');
+        const userIdInput = document.getElementById('user-id');
+
+        // API base URL
+        const apiBaseUrl = "http://localhost:3000";
+
+        let currentDoctorId = null;
+        let selectedTimeSlot = null;
+
+        // Function to get doctor ID from URL query parameter (e.g., doctor.html?id=3)
+        function getDoctorIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("id");
+        }
+
+        // Function to display messages to the user
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box'; // Reset classes
+            if (message) {
+                messageBox.classList.remove('hidden');
+                messageBox.classList.add(type);
+            } else {
+                messageBox.classList.add('hidden');
+            }
+        }
+
+        // Function to fetch and display the doctor details
+        async function fetchDoctorDetails(doctorId) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/doctor/${doctorId}`);
+
+                if (!response.ok) {
+                    const errorBody = response.headers
+                        .get("content-type")
+                        ?.includes("application/json")
+                        ? await response.json()
+                        : { message: response.statusText };
+                    throw new Error(`HTTP ${response.status}: ${errorBody.message}`);
+                }
+
+                const doctor = await response.json();
+
+                if (doctor) {
+                    doctorImg.src = `Images/${doctor.image_path}`;
+                    doctorImg.alt = doctor.doctor_name;
+                    doctorName.textContent = doctor.doctor_name;
+                    doctorDetails.textContent = `Years of Experience: ${doctor.years_of_experience} | Clinic: ${doctor.clinic_address || 'N/A'}`;
+                    doctorInfoDiv.style.display = "flex";
+                } else {
+                    showMessage('Doctor not found.', 'error');
+                    doctorInfoDiv.style.display = "none";
+                }
+            } catch (error) {
+                console.error("Error loading doctor details:", error);
+                showMessage(`Error loading doctor details: ${error.message}`, 'error');
+                doctorInfoDiv.style.display = "none";
+            }
+        }
+
+        // Function to fetch and display all potential time slots with their booked status
+        async function fetchAndDisplayTimeSlots() {
+             if (!currentDoctorId) {
+                showMessage('Doctor ID is missing — unable to load slots.', 'error');
+                loadingSlots.classList.add('hidden');
+                timeSlotsContainer.innerHTML = '<p class="text-center text-red-500 col-span-full">Invalid doctor reference.</p>';
+                return;
+            }
+            const selectedDate = appointmentDateInput.value;
+            timeSlotsContainer.innerHTML = ''; // Clear previous slots
+            selectedSlotTimeInput.value = ''; // Clear selected slot
+            selectedTimeSlot = null; // Reset selected time slot
+            submitBtn.disabled = true; // Disable submit button until slot is chosen
+            slotSelectionMessage.classList.add('hidden'); // Hide selection message
+
+            if (!selectedDate) {
+                noSlotsMessage.classList.remove('hidden');
+                loadingSlots.classList.add('hidden');
+                return;
+            } else {
+                noSlotsMessage.classList.add('hidden');
+            }
+
+            loadingSlots.classList.remove('hidden');
+
+            try {
+                // Fetch all potential slots with their booked status from the backend
+                const response = await fetch(`${apiBaseUrl}/doctor-availability/${currentDoctorId}/${selectedDate}/slots`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const allSlotsWithStatus = await response.json(); // Expecting [{ time: "HH:MM", isBooked: true/false }]
+                loadingSlots.classList.add('hidden');
+
+                if (allSlotsWithStatus.length === 0) {
+                    timeSlotsContainer.innerHTML = '<p class="text-center text-gray-600 col-span-full">No available slots for this date.</p>';
+                } else {
+                    allSlotsWithStatus.forEach(slot => {
+                        const button = document.createElement('button');
+                        button.textContent = slot.time;
+                        button.dataset.time = slot.time; // Store time in a data attribute
+
+                        if (slot.isBooked) {
+                            button.classList.add('time-slot-button', 'booked');
+                            button.disabled = true; // Disable booked slots
+                        } else {
+                            button.classList.add('time-slot-button', 'available');
+                            button.disabled = false; // Enable available slots
+                            button.addEventListener('click', () => {
+                                // Remove 'selected' class from previously selected button
+                                const currentSelected = document.querySelector('.time-slot-button.selected');
+                                if (currentSelected) {
+                                    currentSelected.classList.remove('selected');
+                                }
+                                // Add 'selected' class to the clicked button
+                                button.classList.add('selected');
+                                selectedTimeSlot = slot.time;
+                                selectedSlotTimeInput.value = slot.time; // Update hidden input
+                                submitBtn.disabled = false; // Enable submit button
+                                slotSelectionMessage.classList.add('hidden'); // Hide selection message
+                            });
+                        }
+                        timeSlotsContainer.appendChild(button);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching time slots:', error);
+                loadingSlots.classList.add('hidden');
+                timeSlotsContainer.innerHTML = '<p class="text-center text-red-500 col-span-full">Failed to load time slots. Please try again.</p>';
+            }
+        }
+
+        // Function to handle appointment form submission
+        async function handleAppointmentSubmission(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            if (!selectedTimeSlot) {
+                slotSelectionMessage.classList.remove('hidden');
+                return;
+            }
+
+            if (!reasonInput.value.trim()) { // Check if reason is empty
+                showMessage('Please provide a reason for the appointment.', 'error');
+                reasonInput.focus();
+                return;
+            }
+
+            submitBtn.disabled = true; // Disable button to prevent multiple submissions
+            submitBtn.textContent = 'Booking...';
+            showMessage('', ''); // Clear previous messages
+
+            const appointmentData = {
+                user_id: 1,
+                doctor_id: parseInt(currentDoctorId),
+                appointment_date: appointmentDateInput.value,
+                appointment_time: selectedTimeSlot + ':00',
+                reason: reasonInput.value.trim(), // Trim whitespace
+
+            };
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/appointment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(appointmentData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                showMessage('Appointment booked successfully!', 'success');
+                console.log('Appointment booked:', result);
+
+                // Clear form inputs and reset state
+                reasonInput.value = '';
+                selectedTimeSlot = null;
+                selectedSlotTimeInput.value = '';
+                // Remove 'selected' class from any previously selected button
+                const currentSelected = document.querySelector('.time-slot-button.selected');
+                if (currentSelected) {
+                    currentSelected.classList.remove('selected');
+                }
+                // Re-fetch slots to show the newly booked slot as unavailable
+                await fetchAndDisplayTimeSlots();
+
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                showMessage(`Failed to book appointment: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Book Appointment';
+            }
+        }
+
+        // --- Run on page load ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            currentDoctorId = getDoctorIdFromUrl();
+            if (currentDoctorId) {
+                // Set hidden input value
+                document.getElementById('doctor-id').value = currentDoctorId;
+
+                // Set min date for date input to today
+                const today = new Date().toISOString().split('T')[0];
+                appointmentDateInput.min = today;
+
+                // Placeholder for User ID (replace with actual user ID from authentication)
+                const dummyUserId = 1;
+                userIdInput.value = dummyUserId;
+
+                // Fetch doctor details immediately
+                await fetchDoctorDetails(currentDoctorId);
+
+                
+
+                // Add event listener for date input change
+                appointmentDateInput.addEventListener('change', fetchAndDisplayTimeSlots);
+
+                // Add event listener for form submission
+                appointmentForm.addEventListener('submit', handleAppointmentSubmission);
+
+            } else {
+                showMessage("No doctor ID provided in the URL. Please use a URL like doctor.html?id=1", 'error');
+                doctorInfoDiv.style.display = "none";
+                appointmentDateInput.disabled = true;
+                reasonInput.disabled = true;
+                submitBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

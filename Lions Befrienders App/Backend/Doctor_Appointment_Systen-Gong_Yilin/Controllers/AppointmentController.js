@@ -99,11 +99,36 @@ async function deleteAppointment(req, res) {
     }
 }
 
+// Get all booked appointments for that doctor on that specific date
+async function getByDoctorAndDate(req, res) {
+    try {
+        const { doctorId, date } = req.params; // date format: YYYY-MM-DD
+        const parsedDoctorId = parseInt(doctorId);
+        
+        if (isNaN(parsedDoctorId) || !date) {
+            return res.status(400).json({ message: 'Invalid doctor ID or date provided.' });
+        }
+
+
+        const appointment = await AppointmentModel.getByDoctorAndDate(parsedDoctorId,date);
+
+        if (!appointment) {
+            return res.status(404).json({ error: "Appointment not found" });
+        }
+
+        res.json(appointment);
+    } catch (error) {
+        console.error("Controller error in getAppointmentById:", error);
+        res.status(500).json({ error: "Error retrieving appointment" });
+    }
+}
+
 module.exports = {
     getAllAppointments,
     getAppointmentById,
     getAppointmentsByUserId,
     createAppointment,
     updateAppointment,
-    deleteAppointment
+    deleteAppointment,
+    getByDoctorAndDate
 };
