@@ -1,6 +1,6 @@
 const db_config = require('../../db_config');
 const HobbyGroupModel = require('../Models/HobbyGroupModel');
-
+// yya
 async function getHobbyGroups(req, res) {
     try {
         const groups = await HobbyGroupModel.fetchGroupsWithGroupMemberCount();
