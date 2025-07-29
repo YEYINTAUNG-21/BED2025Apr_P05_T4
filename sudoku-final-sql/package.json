@@ -11,6 +11,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "axios": "^1.10.0",
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
     "express": "^5.1.0",
     "mssql": "^11.0.1"
   }

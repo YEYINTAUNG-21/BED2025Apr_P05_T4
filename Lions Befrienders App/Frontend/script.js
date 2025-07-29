@@ -33,11 +33,17 @@ if (loginForm) {
     e.preventDefault();
     console.log('[DEBUG] Login form submitted');
 
-    const email = this.querySelector('[name="email"]').value;
-    const password = this.querySelector('[name="password"]').value;
+    const res = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: this.querySelector('[name="email"]').value,
+        password: this.querySelector('[name="password"]').value
+      })
+    });
 
     try {
-      const res = await fetch('http://localhost:3000/api/login', {
+      const res = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -49,16 +55,16 @@ if (loginForm) {
       if (res.ok) {
         alert('Login successful!');
         localStorage.setItem('token', data.token);
-        window.location.href = '/caregiver.html';
-        console.log("Stored token:", data.token);
+        window.location.href = '/emergency.html';
       } else {
         alert(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('[ERROR] Login fetch failed:', error);
     }
-  };
+  }
 }
+
 // hobby groups
 window.onload = async () => {
   const groupList = document.getElementById('groupList');
@@ -267,316 +273,136 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLogs(); // Initial load
 });
 
-// js for admin dashboard
-document.addEventListener('DOMContentLoaded', async () => {
-  const token = localStorage.getItem('token');
+// Group detail page
+document.addEventListener("DOMContentLoaded", () => {
+  const groupId = new URLSearchParams(window.location.search).get("group_id");
+  const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+  let currentMemberId = null;
 
-  if (!token) {
-    alert('Admin not logged in.');
-    return;
-  }
+  const joinBtn = document.getElementById("joinButton");
+  const leaveBtn = document.getElementById("leaveButton");
 
-  try {
-    const res = await fetch('/admin/emergency-logs', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    const logs = await res.json();
-    const tbody = document.querySelector('#logsTable tbody');
-
-    logs.forEach(log => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${log.log_id}</td>
-        <td>${log.user_id}</td>
-        <td>${new Date(log.timestamp).toLocaleString()}</td>
-        <td><input type="text" value="${log.status || ''}" id="status-${log.log_id}"></td>
-        <td><button onclick="updateLog(${log.log_id})">Update</button></td>
-        <td><button onclick="deleteLog(${log.log_id})">Delete</button></td>
-      `;
-      tbody.appendChild(row);
-    });
-  } catch (error) {
-    console.error('Failed to load logs:', error);
-  }
-});
-
-async function updateLog(logId) {
-  const token = localStorage.getItem('token');
-  const newStatus = document.getElementById(`status-${logId}`).value;
-
-  try {
-    const res = await fetch(`/admin/emergency-logs/${logId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ status: newStatus })
-    });
-
-    const data = await res.json();
-    alert(data.message || 'Log updated');
-  } catch (error) {
-    console.error('Error updating log:', error);
-  }
-}
-
-async function deleteLog(logId) {
-  const token = localStorage.getItem('token');
-  const confirmDelete = confirm('Are you sure you want to delete this log?');
-
-  if (!confirmDelete) return;
-
-  try {
-    const res = await fetch(`/admin/emergency-logs/${logId}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-
-    const data = await res.json();
-    alert(data.message || 'Log deleted');
-    location.reload(); // Refresh the table
-  } catch (error) {
-    console.error('Error deleting log:', error);
-  }
-}
-
-// Show admin dashboard button if user is admin
-function parseJwt(token) {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
-  const adminBtn = document.getElementById('adminDashboardBtn');
-
-  if (token && adminBtn) {
-    const payload = parseJwt(token);
-    if (payload?.role === 'admin') {
-      adminBtn.style.display = 'inline-block';
-      adminBtn.addEventListener('click', () => {
-        window.location.href = '/admin-dashboard.html';
+  // Load group detail
+  fetch(`http://localhost:3000/api/hobby-groups/${groupId}`)
+    .then(res => res.json())
+    .then(group => {
+      document.getElementById("groupImage").src = `Images/${group.image_url}`;
+      document.getElementById("groupName").textContent = group.group_name;
+      document.getElementById("groupDescription").textContent = group.description;
+      document.getElementById("meetupDate").textContent = new Date(group.meetup_date).toLocaleDateString();
+      const rawTime = group.meetup_time;
+      const timeOnly = new Date(rawTime).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
       });
-    }
-  }
-});
+      document.getElementById("meetupTime").textContent = timeOnly;
+      document.getElementById("meetupLocation").textContent = group.meetup_location;
+    });
 
-document.addEventListener('DOMContentLoaded', async () => {
-  console.log('DOM fully loaded');
+  // Fetch and display members
+  function loadMembers() {
+  fetch(`http://localhost:3000/api/group-members/${groupId}`)
+    .then(res => res.json())
+    .then(members => {
+      console.log("Fetched members:", members);
 
-  const caregiverBox = document.getElementById('caregiverBox');
-  const caregiverName = document.getElementById('caregiverName');
-  const caregiverPhone = document.getElementById('caregiverPhone');
-  const caregiverEmail = document.getElementById('caregiverEmail');
-  const editBtn = document.getElementById('editCaregiverBtn');
-  const deleteBtn = document.getElementById('deleteCaregiverBtn');
-  const saveBtn = document.getElementById('saveCaregiverBtn');
-  const cancelBtn = document.getElementById('cancelEditBtn');
-  const caregiverForm = document.querySelector('.caregiver-edit-fields');
-  const nameInput = document.getElementById('caregiverNameInput');
-  const phoneInput = document.getElementById('caregiverPhoneInput');
-  const emailInput = document.getElementById('caregiverEmailInput');
-
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.warn('No token found, redirecting to login');
-    window.location.href = 'login.html';
-    return;
-  }
-
-  if (!caregiverBox || !caregiverName || !caregiverPhone || !caregiverEmail ||
-      !editBtn || !deleteBtn || !saveBtn || !cancelBtn || !caregiverForm ||
-      !nameInput || !phoneInput || !emailInput) {
-    console.error('Some DOM elements are missing. Check your caregiver.html IDs and class.');
-    return;
-  }
-
-  async function loadCaregiverInfo() {
-    try {
-      const res = await fetch('http://localhost:3000/user/caregiver-info', {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (res.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = 'login.html';
+      if (!Array.isArray(members)) {
+        console.error("Expected members to be an array but got:", members);
         return;
       }
 
-      const data = await res.json();
+      const list = document.getElementById("memberList");
+      list.innerHTML = "";
 
-      if (res.ok) {
-        const hasCaregiver =
-          data.caregiver_name || data.caregiver_phone || data.caregiver_email;
+      const currentUser = members.find(m => m.user_id === loginUser.user_id);
+      currentMemberId = currentUser ? currentUser.member_id : null;
 
-        if (!hasCaregiver) {
-          // Instead of wiping caregiverBox, set placeholders:
-          caregiverName.textContent = '—';
-          caregiverPhone.textContent = '—';
-          caregiverEmail.textContent = '—';
+      // Toggle join/leave button
+      if (currentMemberId) {
+        joinBtn.classList.add("hidden");
+        leaveBtn.classList.remove("hidden");
+      } else {
+        joinBtn.classList.remove("hidden");
+        leaveBtn.classList.add("hidden");
+      }
 
-          // Show Edit button to allow adding caregiver info
-          editBtn.style.display = 'inline-block';
-          // Hide Delete button as nothing to delete
-          deleteBtn.style.display = 'none';
+      // Show members
+      members.forEach(member => {
+        const li = document.createElement("li");
+        li.className = "member-list-item";
 
-          return;
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = member.nickname_in_group || member.full_name;
+        li.appendChild(nameSpan);
+
+        // Edit button for current user
+        if (member.user_id === loginUser.user_id) {
+          const dotBtn = document.createElement("button");
+          dotBtn.className = "dots-button";
+          dotBtn.innerHTML = "&#8942;";
+          dotBtn.onclick = () => {
+            currentMemberId = member.member_id;
+            document.getElementById("nicknameModal").classList.remove("hidden");
+          };
+          li.appendChild(dotBtn);
         }
 
-        // Show caregiver info
-        caregiverName.textContent = data.caregiver_name || '—';
-        caregiverPhone.textContent = data.caregiver_phone || '—';
-        caregiverEmail.textContent = data.caregiver_email || '—';
-
-        nameInput.value = data.caregiver_name || '';
-        phoneInput.value = data.caregiver_phone || '';
-        emailInput.value = data.caregiver_email || '';
-
-        // Show buttons appropriately
-        editBtn.style.display = 'inline-block';
-        deleteBtn.style.display = 'inline-block';
-
-      } else {
-        caregiverBox.innerHTML = `<p>${data.message || 'No caregiver found'}</p>`;
-      }
-    } catch (err) {
-      console.error('Error fetching caregiver info:', err);
-      caregiverBox.innerHTML = `<p>Error loading caregiver info</p>`;
-    }
-  }
-
-  loadCaregiverInfo();
-
-  editBtn.addEventListener('click', () => {
-    caregiverForm.style.display = 'block';
-    editBtn.style.display = 'none';
-
-    // Hide display spans to avoid duplication while editing
-    caregiverName.style.display = 'none';
-    caregiverPhone.parentElement.style.display = 'none'; // .caregiver-phone div
-    caregiverEmail.parentElement.style.display = 'none'; // .caregiver-email div
-
-    // Show save and cancel buttons
-    saveBtn.style.display = 'inline-block';
-    cancelBtn.style.display = 'inline-block';
-  });
-
-  cancelBtn.addEventListener('click', () => {
-    caregiverForm.style.display = 'none';
-    editBtn.style.display = 'inline-block';
-
-    // Show display spans again
-    caregiverName.style.display = 'block';
-    caregiverPhone.parentElement.style.display = 'block';
-    caregiverEmail.parentElement.style.display = 'block';
-
-    saveBtn.style.display = 'none';
-    cancelBtn.style.display = 'none';
-
-    // Reset input values to current display values (or empty if placeholder)
-    nameInput.value = caregiverName.textContent === '—' ? '' : caregiverName.textContent;
-    phoneInput.value = caregiverPhone.textContent === '—' ? '' : caregiverPhone.textContent;
-    emailInput.value = caregiverEmail.textContent === '—' ? '' : caregiverEmail.textContent;
-  });
-
-  saveBtn.addEventListener('click', async () => {
-    try {
-      const res = await fetch('http://localhost:3000/user/caregiver-info', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          caregiver_name: nameInput.value,
-          caregiver_phone: phoneInput.value,
-          caregiver_email: emailInput.value
-        })
+        list.appendChild(li);
       });
+    })
+    .catch(err => {
+      console.error("Error fetching members:", err);
+    });
+}
 
-      if (res.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = 'login.html';
-        return;
-      }
 
-      const result = await res.json();
-
-      if (res.ok) {
-        alert('Caregiver info updated.');
-        caregiverForm.style.display = 'none';
-        editBtn.style.display = 'inline-block';
-
-        // Show display spans again
-        caregiverName.style.display = 'block';
-        caregiverPhone.parentElement.style.display = 'block';
-        caregiverEmail.parentElement.style.display = 'block';
-
-        saveBtn.style.display = 'none';
-        cancelBtn.style.display = 'none';
-
-        loadCaregiverInfo();
-      } else {
-        alert(result.message || 'Failed to update caregiver');
-      }
-    } catch (err) {
-      console.error('Error saving caregiver info:', err);
-      alert('Error occurred while saving caregiver info');
-    }
+  // Join group
+  joinBtn.addEventListener("click", () => {
+    fetch("http://localhost:3000/api/group-members", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        group_id: parseInt(groupId),
+        user_id: loginUser.user_id,
+        nickname_in_group: loginUser.full_name
+      })
+    })
+    .then(res => res.json())
+    .then(() => loadMembers());
   });
 
-  deleteBtn.addEventListener('click', async () => {
-    if (!confirm('Delete this caregiver?')) return;
-
-    try {
-      const res = await fetch('http://localhost:3000/user/caregiver-info', {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (res.status === 401) {
-        localStorage.removeItem('token');
-        window.location.href = 'login.html';
-        return;
-      }
-
-      const result = await res.json();
-
-      if (res.ok) {
-        alert('Caregiver deleted.');
-
-        // Clear inputs and hide edit form
-        nameInput.value = '';
-        phoneInput.value = '';
-        emailInput.value = '';
-        caregiverForm.style.display = 'none';
-
-        // Reset display spans to placeholder and show
-        caregiverName.textContent = '—';
-        caregiverPhone.textContent = '—';
-        caregiverEmail.textContent = '—';
-        caregiverName.style.display = 'block';
-        caregiverPhone.parentElement.style.display = 'block';
-        caregiverEmail.parentElement.style.display = 'block';
-
-        saveBtn.style.display = 'none';
-        cancelBtn.style.display = 'none';
-        editBtn.style.display = 'inline-block';
-
-        // Hide delete button as nothing to delete now
-        deleteBtn.style.display = 'none';
-      } else {
-        alert(result.message || 'Failed to delete caregiver');
-      }
-    } catch (err) {
-      console.error('Error deleting caregiver:', err);
-      alert('Error occurred while deleting caregiver');
-    }
+  // Leave group
+  leaveBtn.addEventListener("click", () => {
+    if (!currentMemberId) return;
+    fetch(`http://localhost:3000/api/group-members/${currentMemberId}`, {
+      method: "DELETE"
+    })
+    .then(() => {
+      currentMemberId = null;
+      loadMembers();
+    });
   });
+
+  // Nickname modal: Close
+  document.getElementById("closeModal").addEventListener("click", () => {
+    document.getElementById("nicknameModal").classList.add("hidden");
+  });
+
+  // Nickname modal: Save
+  document.getElementById("saveNickname").addEventListener("click", () => {
+    const newNick = document.getElementById("newNickname").value;
+    fetch(`http://localhost:3000/api/group-members/${currentMemberId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nickname_in_group: newNick })
+    })
+    .then(() => {
+      document.getElementById("nicknameModal").classList.add("hidden");
+      document.getElementById("newNickname").value = "";
+      loadMembers();
+    });
+  });
+
+  loadMembers(); // initial load
 });

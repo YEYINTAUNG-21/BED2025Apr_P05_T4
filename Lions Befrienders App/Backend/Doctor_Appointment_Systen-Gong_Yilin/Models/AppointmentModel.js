@@ -1,5 +1,9 @@
 const sql = require('mssql');
 const dbConfig = require('../../db_config');
+<<<<<<< HEAD
+=======
+const { parse, addMinutes, format } = require('date-fns'); // <--- THIS LINE
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 
 
 
@@ -61,17 +65,25 @@ async function getAppointmentById(id) {
                 a.appointment_date,
                 a.appointment_time,
                 a.reason,
+<<<<<<< HEAD
                 a.conduct_method,
                 a.status,
                 a.created_at,
                 a.updated_at,
+=======
+                a.status,
+                a.created_at,
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 u.user_id,
                 u.full_name AS user_full_name,
                 u.email AS user_email,
                 d.doctor_id,
                 d.doctor_name,
+<<<<<<< HEAD
                 d.license_number,
                 s.name AS specialty_name,
+=======
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 d.clinic_address
             FROM
                 Appointments AS a
@@ -79,8 +91,11 @@ async function getAppointmentById(id) {
                 users AS u ON a.user_id = u.user_id
             INNER JOIN
                 Doctors AS d ON a.doctor_id = d.doctor_id
+<<<<<<< HEAD
             INNER JOIN
                 Specialties AS s ON d.specialty_id = s.specialty_id
+=======
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
             WHERE
                 a.appointment_id = @id;
         `;
@@ -157,6 +172,10 @@ async function getAppointmentsByUserId(userId) {
     }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 async function createAppointment(appointmentData) {
     let connection;
     try {
@@ -168,7 +187,10 @@ async function createAppointment(appointmentData) {
                 appointment_date,
                 appointment_time,
                 reason,
+<<<<<<< HEAD
                 conduct_method,
+=======
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 status
             )
             VALUES (
@@ -177,19 +199,37 @@ async function createAppointment(appointmentData) {
                 @appointment_date,
                 @appointment_time,
                 @reason,
+<<<<<<< HEAD
                 @conduct_method,
+=======
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 @status
             );
             SELECT SCOPE_IDENTITY() AS appointment_id;
         `;
+<<<<<<< HEAD
+=======
+        //const AppointmentTime = parse(appointmentData.appointment_time, 'HH:mm:ss', new Date(2000, 0, 1));
+        
+        const [hours, minutes, seconds] = appointmentData.appointment_time.split(':').map(Number);
+
+        const AppointmentTime = new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds));
+
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
         const request = connection.request();
         request.input("user_id", sql.Int, appointmentData.user_id);
         request.input("doctor_id", sql.Int, appointmentData.doctor_id);
         request.input("appointment_date", sql.Date, appointmentData.appointment_date);
+<<<<<<< HEAD
         request.input("appointment_time", sql.Time, appointmentData.appointment_time);
         request.input("reason", sql.VarChar(500), appointmentData.reason || null); // Allow null
         request.input("conduct_method", sql.VarChar(20), appointmentData.conduct_method);
         request.input("status", sql.VarChar(20), appointmentData.status || 'Scheduled'); // Default to 'Scheduled'
+=======
+        request.input("appointment_time", sql.Time, AppointmentTime);
+        request.input("reason", sql.VarChar(500), appointmentData.reason || null); // Allow null
+        request.input("status", sql.VarChar(20), 'Scheduled'); // Default to 'Scheduled'
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 
         const result = await request.query(query);
         const newAppointmentId = result.recordset[0].appointment_id;
@@ -310,6 +350,25 @@ async function deleteAppointment(id) {
     }
 }
 
+<<<<<<< HEAD
+=======
+
+async function getByDoctorAndDate(doctorId, date) {
+    let connection;
+       try {
+            // CONVERT appointment_time to HH:MM string in the query
+            connection = await sql.connect(dbConfig);
+            const result = await connection.request()
+                .input('doctor_id', sql.Int, doctorId)
+                .input('appointment_date', sql.Date, date)
+                .query("SELECT appointment_id, CONVERT(VARCHAR(5), appointment_time, 108) AS appointment_time FROM Appointments WHERE doctor_id = @doctor_id AND appointment_date = @appointment_date AND status IN ('Scheduled', 'Rescheduled')");
+            return result.recordset;
+        } catch (err) {
+            throw new Error(`Error fetching appointments by doctor and date: ${err.message}`);
+        }
+}
+
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 // Export the functions for use in other modules
 module.exports = {
     getAllAppointments,
@@ -317,5 +376,10 @@ module.exports = {
     getAppointmentsByUserId,
     createAppointment,
     updateAppointment,
+<<<<<<< HEAD
     deleteAppointment
+=======
+    deleteAppointment,
+    getByDoctorAndDate
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 };
