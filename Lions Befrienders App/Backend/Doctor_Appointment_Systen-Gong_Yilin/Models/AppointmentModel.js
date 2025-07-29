@@ -1,0 +1,321 @@
+const sql = require('mssql');
+const dbConfig = require('../../db_config');
+
+
+
+async function getAllAppointments() {
+    let connection;
+    try {
+        connection = await sql.connect(dbConfig);
+        const query = `
+            SELECT
+                a.appointment_id,
+                a.appointment_date,
+                a.appointment_time,
+                a.reason,
+                a.conduct_method,
+                a.status,
+                a.created_at,
+                a.updated_at,
+                u.user_id,
+                u.full_name AS user_full_name,
+                u.email AS user_email,
+                d.doctor_id,
+                d.doctor_name,
+                d.license_number,
+                s.name AS specialty_name,
+                d.clinic_address
+            FROM
+                Appointments AS a
+            INNER JOIN
+                users AS u ON a.user_id = u.user_id
+            INNER JOIN
+                Doctors AS d ON a.doctor_id = d.doctor_id
+            INNER JOIN
+                Specialties AS s ON d.specialty_id = s.specialty_id;
+        `;
+        const result = await connection.request().query(query);
+        return result.recordset;
+    } catch (error) {
+        console.error("Database error in getAllAppointments:", error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection in getAllAppointments:", err);
+            }
+        }
+    }
+}
+
+
+async function getAppointmentById(id) {
+    let connection;
+    try {
+        connection = await sql.connect(dbConfig);
+        const query = `
+            SELECT
+                a.appointment_id,
+                a.appointment_date,
+                a.appointment_time,
+                a.reason,
+                a.conduct_method,
+                a.status,
+                a.created_at,
+                a.updated_at,
+                u.user_id,
+                u.full_name AS user_full_name,
+                u.email AS user_email,
+                d.doctor_id,
+                d.doctor_name,
+                d.license_number,
+                s.name AS specialty_name,
+                d.clinic_address
+            FROM
+                Appointments AS a
+            INNER JOIN
+                users AS u ON a.user_id = u.user_id
+            INNER JOIN
+                Doctors AS d ON a.doctor_id = d.doctor_id
+            INNER JOIN
+                Specialties AS s ON d.specialty_id = s.specialty_id
+            WHERE
+                a.appointment_id = @id;
+        `;
+        const request = connection.request();
+        request.input("id", sql.Int, id); // Specify type for input parameter
+        const result = await request.query(query);
+
+        if (result.recordset.length === 0) {
+            return null; // Appointment not found
+        }
+        return result.recordset[0];
+    } catch (error) {
+        console.error(`Database error in getAppointmentById (ID: ${id}):`, error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection in getAppointmentById:", err);
+            }
+        }
+    }
+}
+
+async function getAppointmentsByUserId(userId) {
+    let connection;
+    try {
+        connection = await sql.connect(dbConfig);
+        const query = `
+            SELECT
+                a.appointment_id,
+                a.appointment_date,
+                a.appointment_time,
+                a.reason,
+                a.conduct_method,
+                a.status,
+                a.created_at,
+                a.updated_at,
+                u.user_id,
+                u.full_name AS user_full_name,
+                u.email AS user_email,
+                d.doctor_id,
+                d.doctor_name,
+                d.license_number,
+                s.name AS specialty_name,
+                d.clinic_address
+            FROM
+                Appointments AS a
+            INNER JOIN
+                users AS u ON a.user_id = u.user_id
+            INNER JOIN
+                Doctors AS d ON a.doctor_id = d.doctor_id
+            INNER JOIN
+                Specialties AS s ON d.specialty_id = s.specialty_id
+            WHERE
+                a.user_id = @userId; -- Filter by user_id
+        `;
+        const request = connection.request();
+        request.input("userId", sql.Int, userId); // Specify type for input parameter
+        const result = await request.query(query);
+        return result.recordset; // Returns an array (could be empty if no appointments found)
+    } catch (error) {
+        console.error(`Database error in getAppointmentsByUserId (User ID: ${userId}):`, error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection in getAppointmentsByUserId:", err);
+            }
+        }
+    }
+}
+
+async function createAppointment(appointmentData) {
+    let connection;
+    try {
+        connection = await sql.connect(dbConfig);
+        const query = `
+            INSERT INTO Appointments (
+                user_id,
+                doctor_id,
+                appointment_date,
+                appointment_time,
+                reason,
+                conduct_method,
+                status
+            )
+            VALUES (
+                @user_id,
+                @doctor_id,
+                @appointment_date,
+                @appointment_time,
+                @reason,
+                @conduct_method,
+                @status
+            );
+            SELECT SCOPE_IDENTITY() AS appointment_id;
+        `;
+        const request = connection.request();
+        request.input("user_id", sql.Int, appointmentData.user_id);
+        request.input("doctor_id", sql.Int, appointmentData.doctor_id);
+        request.input("appointment_date", sql.Date, appointmentData.appointment_date);
+        request.input("appointment_time", sql.Time, appointmentData.appointment_time);
+        request.input("reason", sql.VarChar(500), appointmentData.reason || null); // Allow null
+        request.input("conduct_method", sql.VarChar(20), appointmentData.conduct_method);
+        request.input("status", sql.VarChar(20), appointmentData.status || 'Scheduled'); // Default to 'Scheduled'
+
+        const result = await request.query(query);
+        const newAppointmentId = result.recordset[0].appointment_id;
+        return await getAppointmentById(newAppointmentId);
+    } catch (error) {
+        console.error("Database error in createAppointment:", error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection in createAppointment:", err);
+            }
+        }
+    }
+}
+
+async function updateAppointment(id, appointmentData) {
+    let connection;
+    try {
+        connection = await sql.connect(dbConfig);
+
+        // Build the SET clause dynamically based on provided data
+        const updateFields = [];
+        const request = connection.request();
+        request.input("id", sql.Int, id); // Always input the ID
+
+        if (appointmentData.user_id !== undefined) {
+            updateFields.push("user_id = @user_id");
+            request.input("user_id", sql.Int, appointmentData.user_id);
+        }
+        if (appointmentData.doctor_id !== undefined) {
+            updateFields.push("doctor_id = @doctor_id");
+            request.input("doctor_id", sql.Int, appointmentData.doctor_id);
+        }
+        if (appointmentData.appointment_date !== undefined) {
+            updateFields.push("appointment_date = @appointment_date");
+            request.input("appointment_date", sql.Date, appointmentData.appointment_date);
+        }
+        if (appointmentData.appointment_time !== undefined) {
+            updateFields.push("appointment_time = @appointment_time");
+            request.input("appointment_time", sql.Time, appointmentData.appointment_time);
+        }
+        if (appointmentData.reason !== undefined) {
+            updateFields.push("reason = @reason");
+            request.input("reason", sql.VarChar(500), appointmentData.reason || null);
+        }
+        if (appointmentData.conduct_method !== undefined) {
+            updateFields.push("conduct_method = @conduct_method");
+            request.input("conduct_method", sql.VarChar(20), appointmentData.conduct_method);
+        }
+        if (appointmentData.status !== undefined) {
+            updateFields.push("status = @status");
+            request.input("status", sql.VarChar(20), appointmentData.status);
+        }
+
+        // Always update updated_at
+        updateFields.push("updated_at = GETDATE()");
+
+        if (updateFields.length === 0) {
+            console.log("No fields to update for appointment ID:", id);
+            return await getAppointmentById(id); // Return current state if no updates
+        }
+
+        const query = `
+            UPDATE Appointments
+            SET
+                ${updateFields.join(",\n")}
+            WHERE
+                appointment_id = @id;
+        `;
+
+        const result = await request.query(query);
+
+        if (result.rowsAffected[0] === 0) {
+            return null; // Appointment not found or no changes made
+        }
+        return await getAppointmentById(id); // Return the updated appointment
+    } catch (error) {
+        console.error(`Database error in updateAppointment (ID: ${id}):`, error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection in updateAppointment:", err);
+            }
+        }
+    }
+}
+
+
+async function deleteAppointment(id) {
+    let connection;
+    try {
+        connection = await sql.connect(dbConfig);
+        const query = `
+            DELETE FROM Appointments
+            WHERE appointment_id = @id;
+        `;
+        const request = connection.request();
+        request.input("id", sql.Int, id);
+        const result = await request.query(query);
+        return result.rowsAffected[0] > 0; // Returns true if at least one row was affected (deleted)
+    } catch (error) {
+        console.error(`Database error in deleteAppointment (ID: ${id}):`, error);
+        throw error;
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error("Error closing connection in deleteAppointment:", err);
+            }
+        }
+    }
+}
+
+// Export the functions for use in other modules
+module.exports = {
+    getAllAppointments,
+    getAppointmentById,
+    getAppointmentsByUserId,
+    createAppointment,
+    updateAppointment,
+    deleteAppointment
+};

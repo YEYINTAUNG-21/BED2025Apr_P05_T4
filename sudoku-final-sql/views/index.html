@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sudoku Leaderboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Top 10 Leaderboard</h1>
+    <ul id="leaderboard"></ul>
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <a href="/game.html">
+      <button onclick="localStorage.setItem('difficulty', document.getElementById('difficulty').value)">
+        Start New Game
+      </button>
+    </a>
+  </div>
+  <script>
+    async function loadLeaderboard() {
+      const res = await fetch('/api/sudoku/leaderboard');
+      const scores = await res.json();
+      const list = document.getElementById('leaderboard');
+      list.innerHTML = "";
+      scores.forEach((entry, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${i+1}. ${entry.username} - ${entry.score} (${entry.difficulty})`;
+        list.appendChild(li);
+      });
+    }
+    loadLeaderboard();
+  </script>
+</body>
+</html>
