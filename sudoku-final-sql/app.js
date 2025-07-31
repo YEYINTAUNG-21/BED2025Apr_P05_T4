@@ -139,15 +139,27 @@ app.get("/api/sudoku/session/:username", async (req, res) => {
       .query(`SELECT TOP 1 * FROM sudoku_sessions WHERE username = @username`);
 
     if (result.recordset.length > 0) {
-      res.json(result.recordset[0]);
+      const session = result.recordset[0];
+
+      // ✅ Prioritise saved board if available
+     const puzzle = session.currentState
+  ? JSON.parse(session.currentState)
+  : JSON.parse(session.puzzle);
+
+
+      const solution = JSON.parse(session.solution);
+
+      res.json({ puzzle, solution });
     } else {
       res.status(404).json({ message: "No saved session" });
     }
   } catch (err) {
-    console.error(" DB Load Error:", err);
+    console.error("DB Load Error:", err);
     res.status(500).json({ error: "Failed to load session." });
   }
 });
+
+
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(" Server running on http://localhost:3000");

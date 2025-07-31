@@ -66,6 +66,22 @@ async function fetchNewGame() {
     console.error(" Error fetch puzzle:", error);
   }
 }
+async function loadSavedGame() {
+  const username = localStorage.getItem("username");
+  if (!username) return;
+
+  try {
+    const response = await axios.get(`/api/sudoku/session/${username}`);
+    const { puzzle, solution } = response.data;
+
+    createBoard(puzzle);            // puzzle = currentState or original puzzle
+    window.solution = solution;     // so input validation works
+  } catch (err) {
+    console.error("Load error:", err);
+    alert("No session found.");
+    window.location.href = "/";
+  }
+}
 
 function checkCompletion() {
   const isComplete = board.every((val, i) => val === solution[i]);
@@ -91,23 +107,24 @@ function checkCompletion() {
   }
 }
 
-function saveGame() {
+async function saveGame() {
   const username = localStorage.getItem("username");
-  if (!username) return alert("No username found.");
+  if (!username) return;
 
-  fetch("/api/sudoku/save", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  try {
+    await axios.post("/api/sudoku/save", {
       username,
       puzzle: JSON.stringify(originalBoard),
       currentState: JSON.stringify(board),
       solution: JSON.stringify(solution),
       difficulty: localStorage.getItem("difficulty") || "easy"
-    })
-  }).then(res => res.json())
-    .then(data => alert(data.message || "Game saved!"))
-    .catch(err => console.error(" Failed to save:", err));
+    });
+
+    alert("Game saved!");
+  } catch (err) {
+    console.error("Save error:", err);
+    alert("Failed to save game.");
+  }
 }
 
 async function loadSavedGame(username) {
@@ -148,3 +165,6 @@ function handleNumberInput(number) {
     selectedCell.dispatchEvent(new Event("input"));
   }
 }
+document.addEventListener("DOMContentLoaded", () => {
+  loadSavedGame();
+});
