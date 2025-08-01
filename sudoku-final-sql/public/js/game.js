@@ -13,38 +13,43 @@ function createBoard(puzzle) {
   originalBoard = [...board];
 
   board.forEach((val, i) => {
-    const cell = document.createElement("input");
-    cell.maxLength = 1;
-    cell.className = "sudoku-cell";
+  const cell = document.createElement("input");
+  cell.maxLength = 1;
+  cell.className = "sudoku-cell";
 
-    if (originalBoard[i] !== 0) {
-      cell.value = originalBoard[i];
-      cell.disabled = true;
-      cell.style.backgroundColor = "#eee";
-    } else {
-      cell.value = val !== 0 ? val : "";
-      cell.addEventListener("input", () => {
-        const entered = parseInt(cell.value) || 0;
-        board[i] = entered;
+  // ✅ Add this line to track selected cell
+  cell.addEventListener("focus", () => {
+    selectedCell = cell;
+  });
 
-        if (solution.length > 0) {
-          if (entered === solution[i]) {
-            cell.style.backgroundColor = "#d4fcd4";
-          } else {
-            cell.style.backgroundColor = "#ffd6d6";
-          }
+  if (originalBoard[i] !== 0) {
+    cell.value = originalBoard[i];
+    cell.disabled = true;
+    cell.style.backgroundColor = "#eee";
+  } else {
+    cell.value = val !== 0 ? val : "";
+    cell.addEventListener("input", () => {
+      const entered = parseInt(cell.value) || 0;
+      board[i] = entered;
 
-          checkCompletion();
+      if (solution.length > 0) {
+        if (entered === solution[i]) {
+          cell.style.backgroundColor = "#d4fcd4";
+        } else {
+          cell.style.backgroundColor = "#ffd6d6";
         }
-      });
 
-      if (val !== 0 && solution.length > 0) {
-        cell.style.backgroundColor = val === solution[i] ? "#d4fcd4" : "#ffd6d6";
+        checkCompletion();
       }
-    }
+    });
 
-    boardContainer.appendChild(cell);
-  });
+    if (val !== 0 && solution.length > 0) {
+      cell.style.backgroundColor = val === solution[i] ? "#d4fcd4" : "#ffd6d6";
+    }
+  }
+
+  boardContainer.appendChild(cell);
+});
 }
 async function fetchNewGame() {
   const boardContainer = document.getElementById("sudoku-board");
@@ -131,3 +136,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     fetchNewGame();
   }
 });
+
+function handleNumberInput(number) {
+  if (!selectedCell || selectedCell.disabled) return;
+
+  if (number === 0) {
+    selectedCell.value = "";
+    selectedCell.dispatchEvent(new Event("input"));
+  } else {
+    selectedCell.value = number;
+    selectedCell.dispatchEvent(new Event("input"));
+  }
+}

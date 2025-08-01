@@ -1,4 +1,11 @@
 const DoctorModel = require("../Models/DoctorModel");
+<<<<<<< HEAD
+
+// Get all users
+async function getAllDoctors(req, res) {
+  try {
+    const Doctors = await DoctorModel.getAllDoctors();
+=======
 const AppointmentModel = require("../Models/AppointmentModel");
   const { parse, addMinutes, format } = require('date-fns'); // <--- THIS LINE
 
@@ -9,6 +16,7 @@ async function getAllDoctors(req, res) {
     if (!Doctors) {
       return res.status(404).json({ error: "doctor not found" });
     }
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
     res.json(Doctors);
   } catch (error) {
     console.error("Controller error:", error);
@@ -36,6 +44,8 @@ async function getDoctorById(req, res) {
   }
 }
 
+<<<<<<< HEAD
+=======
 
 async function getDoctorsByLanguage(req, res) {
   try {
@@ -58,6 +68,7 @@ async function getDoctorsByLanguage(req, res) {
 
 
 
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 //update a user
 async function updateDoctor(req,res) {
     try{
@@ -72,6 +83,9 @@ async function updateDoctor(req,res) {
     }
 }
 
+<<<<<<< HEAD
+//delete a user
+=======
 async function getAvailbilityByDoctorId(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -141,12 +155,17 @@ async function getAvailableSlots(req, res) {
     };
 
 
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 
 module.exports = {
   getAllDoctors,
   getDoctorById,
+<<<<<<< HEAD
+  updateDoctor
+=======
   updateDoctor,
   getAvailbilityByDoctorId,
   getAvailableSlots
 
+>>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 };
