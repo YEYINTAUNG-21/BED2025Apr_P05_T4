@@ -1,10 +1,10 @@
 const sql = require('mssql');
 const dbConfig = require('../../db_config');
 
-function createUtcTimeDate(timeString) {
-    const [hours, minutes, seconds] = timeString.split(':').map(Number);
-    return new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds)); // Use arbitrary date
-}
+// function createUtcTimeDate(timeString) {
+//     const [hours, minutes, seconds] = timeString.split(':').map(Number);
+//     return new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds)); // Use arbitrary date
+// }
 
 async function getAllDoctors(){
     let connection;

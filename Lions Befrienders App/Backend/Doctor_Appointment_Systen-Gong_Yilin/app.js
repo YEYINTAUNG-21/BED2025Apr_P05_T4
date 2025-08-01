@@ -11,6 +11,8 @@ const cors = require('cors');
 
 const DoctorController = require('./Controllers/DoctorController');
 const AppointmentController = require('./Controllers/AppointmentController');
+const userController = require('./Controllers/UserController');
+const validateInput = require('./Middleware/ValidateInput');
 //const validateInput = require('./Middleware/ValidateInput');
 
 const app = express();
@@ -23,16 +25,23 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
+app.post('/api/signup', validateInput.validateSignupData, userController.signup);
+app.post('/api/login', validateInput.validateLoginData, userController.login);
+app.get("/users", userController.getAllUsers); // Get all users
+app.get("/users/:id", userController.getUserById); // Get user by ID
+app.get("/users/email/:email", userController.getUserByEmail); // Get user by Email
+app.delete("/users/:id", userController.deleteUserAccount); // Delete user
+
 app.get("/doctors", DoctorController.getAllDoctors); 
 app.get("/doctor/:id", DoctorController.getDoctorById); 
 app.put("/doctor/:id", DoctorController.updateDoctor); 
 
-app.get("/appointment", AppointmentController.getAllAppointments); 
+app.get("/api/appointments", AppointmentController.getAllAppointments); 
 app.get("/appointment/:id", AppointmentController.getAppointmentById); 
-app.get("/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
+app.get("/api/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
 app.post("/appointment",AppointmentController.createAppointment);
-app.put("/appointment/:id", DoctorController.updateDoctor); 
-app.delete("/appointment/:id",AppointmentController.deleteAppointment);
+app.put("/api/appointments/:id", AppointmentController.updateAppointment); 
+app.delete("/api/appointments/:id",AppointmentController.deleteAppointment);
 
 app.get("/availability/:id",DoctorController.getAvailbilityByDoctorId);
 app.get("/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
