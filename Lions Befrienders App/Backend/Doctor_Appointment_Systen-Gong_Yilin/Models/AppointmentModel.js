@@ -2,8 +2,6 @@ const sql = require('mssql');
 const dbConfig = require('../../db_config');
 const { parse, compareAsc, format } = require('date-fns'); // <--- THIS LINE
 
-const { parse, addMinutes, format } = require('date-fns'); // <--- THIS LINE
-
 
 
 async function getAllAppointments() {
@@ -58,25 +56,13 @@ async function getAppointmentById(id) {
                 a.appointment_date,
                 CONVERT(VARCHAR(5), a.appointment_time, 108) + '' AS appointment_time, 
                 a.reason,
-<<<<<<< HEAD
-                a.conduct_method,
                 a.status,
                 a.created_at,
-                a.updated_at,
-=======
-                a.status,
-                a.created_at,
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 u.user_id,
                 u.full_name AS user_full_name,
                 u.email AS user_email,
                 d.doctor_id,
                 d.doctor_name,
-<<<<<<< HEAD
-                d.license_number,
-                s.name AS specialty_name,
-=======
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 d.clinic_address
             FROM
                 Appointments AS a
@@ -84,11 +70,6 @@ async function getAppointmentById(id) {
                 users AS u ON a.user_id = u.user_id
             INNER JOIN
                 Doctors AS d ON a.doctor_id = d.doctor_id
-<<<<<<< HEAD
-            INNER JOIN
-                Specialties AS s ON d.specialty_id = s.specialty_id
-=======
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
             WHERE
                 a.appointment_id = @id;
         `;
@@ -225,10 +206,6 @@ async function createAppointment(appointmentData) {
                 appointment_date,
                 appointment_time,
                 reason,
-<<<<<<< HEAD
-                conduct_method,
-=======
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 status
             )
             VALUES (
@@ -237,36 +214,23 @@ async function createAppointment(appointmentData) {
                 @appointment_date,
                 @appointment_time,
                 @reason,
-<<<<<<< HEAD
-                @conduct_method,
-=======
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
                 @status
             );
             SELECT SCOPE_IDENTITY() AS appointment_id;
         `;
-
         //const AppointmentTime = parse(appointmentData.appointment_time, 'HH:mm:ss', new Date(2000, 0, 1));
         
         const [hours, minutes, seconds] = appointmentData.appointment_time.split(':').map(Number);
 
         const AppointmentTime = new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds));
 
-
         const request = connection.request();
         request.input("user_id", sql.Int, appointmentData.user_id);
         request.input("doctor_id", sql.Int, appointmentData.doctor_id);
         request.input("appointment_date", sql.Date, appointmentData.appointment_date);
-
-        request.input("appointment_time", sql.Time, appointmentData.appointment_time);
-        request.input("reason", sql.VarChar(500), appointmentData.reason || null); // Allow null
-        request.input("conduct_method", sql.VarChar(20), appointmentData.conduct_method);
-        request.input("status", sql.VarChar(20), appointmentData.status || 'Scheduled'); // Default to 'Scheduled'
-
         request.input("appointment_time", sql.Time, AppointmentTime);
         request.input("reason", sql.VarChar(500), appointmentData.reason || null); // Allow null
         request.input("status", sql.VarChar(20), 'Scheduled'); // Default to 'Scheduled'
-
 
         const result = await request.query(query);
         const newAppointmentId = result.recordset[0].appointment_id;
@@ -392,7 +356,6 @@ async function deleteAppointment(id) {
 }
 
 
-
 async function getByDoctorAndDate(doctorId, date) {
     let connection;
        try {
@@ -408,7 +371,6 @@ async function getByDoctorAndDate(doctorId, date) {
         }
 }
 
-
 // Export the functions for use in other modules
 module.exports = {
     getAllAppointments,
@@ -416,7 +378,6 @@ module.exports = {
     getAppointmentsByUserId,
     createAppointment,
     updateAppointment,
-    deleteAppointment,
     deleteAppointment,
     getByDoctorAndDate
 };

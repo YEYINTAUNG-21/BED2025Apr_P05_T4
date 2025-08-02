@@ -222,7 +222,7 @@ async function handleUpdateSubmission(event) {
 
         // Redirect back to user's appointments page
         setTimeout(() => {
-            window.location.href = `userAppointments.html?id=${currentUserId}`;
+            window.location.href = `appointment.html?id=${currentUserId}`;
         }, 1500); // Redirect after 1.5 seconds
 
     } catch (error) {

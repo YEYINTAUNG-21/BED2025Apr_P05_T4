@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caregiver Info</title>
+  <link rel="stylesheet" href="../CSS/caregiver.css" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body> 
+  <div class="caregiver-container">
+    <header class="top-header">
+      <a href="caregiver.html" class="logo-container">
+        <img src="Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo" />
+      </a>
+      <h1>Caregiver Contacts</h1>
+    </header>
+
+    <div class="caregiver-box" id="caregiverBox">
+      <!-- Display Mode -->
+      <div class="caregiver-name" id="caregiverName">Loading...</div>
+
+      <div class="caregiver-phone">
+        <i class="fas fa-phone icon"></i>
+        <span id="caregiverPhone">Loading...</span>
+      </div>
+
+      <div class="caregiver-email">
+        <i class="fas fa-envelope icon"></i>
+        <span id="caregiverEmail">Loading...</span>
+      </div>
+
+      <!-- Edit Mode (hidden initially) -->
+      <div class="caregiver-edit-fields" style="display: none;">
+        <input id="caregiverNameInput" type="text" placeholder="Enter caregiver name" />
+        <input id="caregiverPhoneInput" type="text" placeholder="Enter caregiver phone" />
+        <input id="caregiverEmailInput" type="email" placeholder="Enter caregiver email" />
+      </div>
+
+      <!-- CRUD Buttons -->
+      <div class="caregiver-buttons">
+        <button id="editCaregiverBtn">Edit</button>
+        <button id="saveCaregiverBtn" style="display:none;">Save</button>
+        <button id="cancelEditBtn" style="display:none;">Cancel</button>
+        <button id="deleteCaregiverBtn" class="delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../JS/script.js" defer></script>
+</body>
+</html>

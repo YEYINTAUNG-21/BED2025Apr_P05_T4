@@ -18,12 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Function to get user ID from URL query parameter (e.g., appointment.html?id=3)
-    function getUserIdFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get('id');
-    }
-
     // Function to handle cancelling an appointment
     async function cancelAppointment(appointmentId, userId) {
         if (!confirm('Are you sure you want to cancel this appointment?')) {
@@ -91,14 +85,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const card = document.createElement('div');
                     card.className = 'appointment-card';
                     card.innerHTML = `
-                        <h3>Appointment with Dr. ${appointment.doctor_name}</h3>
-                        <p><strong>Date:</strong> ${appointment.appointment_date.split('T')[0]}</p>
-                        <p><strong>Time:</strong> ${appointment.appointment_time}</p>
-                        <p><strong>Reason:</strong> ${appointment.reason}</p>
-                        <p><strong>Status:</strong> <span class="status ${appointment.status}">${appointment.status}</span></p>
-                        <p class="text-xs text-gray-500 mt-2">Booked on: ${new Date(appointment.created_at).toLocaleString()}</p>
+                        <div class="info">
+                            <h3>Appointment with ${appointment.doctor_name}</h3>
+                            <p><strong>Date:</strong> ${appointment.appointment_date.split('T')[0]}</p>
+                            <p><strong>Time:</strong> ${appointment.appointment_time}</p>
+                            <p><strong>clinic address:</strong> ${appointment.clinic_address}</p>
+                            <p><strong>Status:</strong> <span class="status ${appointment.status}">${appointment.status}</span></p>
+                            <p><strong>Reason:</strong> ${appointment.reason}</p>
+                            <p class="text-xs text-gray-500 mt-2">Booked on: ${new Date(appointment.created_at).toLocaleString()}</p>
+
+                        </div>
+                        
                         <div class="appointment-actions">
-                            <button class="btn-view" data-appointment-id="${appointment.appointment_id}">View Details</button>
                             ${appointment.status !== 'Completed' ? `
                                 <button class="btn-update" data-appointment-id="${appointment.appointment_id}">Update Appointment</button>
                                 <button class="btn-cancel" data-appointment-id="${appointment.appointment_id}">Cancel Appointment</button>
@@ -106,12 +104,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     `;
                     appointmentsList.appendChild(card);
-
-                    // Add event listeners
-                    card.querySelector('.btn-view').addEventListener('click', () => {
-                        showMessage(`View Details for Appointment ID: ${appointment.appointment_id} (Functionality not implemented)`, 'info');
-                        console.log('View Details clicked for:', appointment);
-                    });
 
                     // Only add listeners for update/cancel if buttons exist
                     if (appointment.status !== 'Completed') {
@@ -133,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- Run on page load ---
-    const userId = getUserIdFromUrl();
+    const userId =localStorage.getItem("userId");;
     if (userId) {
         fetchAndDisplayAppointments(userId);
     } else {

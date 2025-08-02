@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Hobby Group</title>
+  <link rel="stylesheet" href="../CSS/hobby-style.css" />
+</head>
+<body>
+  <div class="create-hobby-container">
+    <header class="top-header">
+        <a href="create-hobby.html" class="logo-container">
+          <img src="Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo">
+        </a>
+      <h1>Hobby Group Creation</h1>
+    </header>
+
+    <div class="form-wrapper">
+      <a href="join-hobby.html" class="back-button">←</a>
+
+      <form id="createHobbyForm" enctype="multipart/form-data">
+        <div class="image-upload">
+          <div class="image-preview" id="imagePreview">
+            <span>Image</span>
+          </div>
+          <div>
+            <label for="groupImage" class="upload-btn">Upload Photo</label>
+            <input type="file" id="groupImage" name="groupImage" accept="image/*" hidden />
+          </div>
+        </div>
+
+        <input type="text" name="group_name" placeholder="Group Name" required />
+        <input type="text" name="description" placeholder="Brief Description" required />
+
+        <h3>Uncoming Meetup</h3>
+        <input type="date" name="meetup_date" />
+        <input type="time" name="meetup_time" />
+        <input type="text" name="meetup_location" placeholder="Location" />
+
+        <button type="submit" class="create-btn">Create</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../JS/hobby-group.js"></script>
+</body>
+</html>
+

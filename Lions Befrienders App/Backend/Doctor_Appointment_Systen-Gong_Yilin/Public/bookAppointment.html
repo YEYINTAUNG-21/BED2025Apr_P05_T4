@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add date-fns CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/date-fns.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -20,9 +22,9 @@
             padding: 32px;
             border-radius: 12px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            
-            margin: 0px 300px;
-            
+            width: 100%; /* Make it responsive */
+            max-width: 600px; /* Max width for desktop */
+            /*margin: 0px 220px;*/
         }
         .doctor-info {
             display: flex;
@@ -33,13 +35,15 @@
             background-color: #e0f2fe; /* Light blue background */
             border-radius: 8px;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+            font-size: x-large;
         }
         .doctor-img {
-            width: 96px; /* w-24 */
-            height: 96px; /* h-24 */
+            width: 250px; /* w-24 */
+            height: 250px; /* h-24 */
             border-radius: 9999px; /* rounded-full */
             object-fit: cover;
             border: 3px solid #90cdf4; /* blue-300 */
+            margin-right: 40px;
         }
         .time-slot-grid {
             display: grid;
@@ -50,12 +54,13 @@
         .time-slot-button {
             padding: 10px 16px; /* px-4 py-2 */
             border-radius: 8px; /* rounded-lg */
-            font-size: 0.875rem; /* text-sm */
+            font-size: 1.375rem; /* text-sm */
             font-weight: 500; /* font-medium */
             transition: all 0.2s ease-in-out;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             border: none;
+            
         }
         .time-slot-button.available {
             background-color: #3b82f6; /* blue-600 */
@@ -87,9 +92,9 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-size: 1rem; /* text-sm */
-            font-weight: 500; /* font-medium */
-            color: #374151; /* gray-700 */
+            font-size: 1.3rem; /* text-sm */
+            font-weight: 700; /* font-medium */
+            color: #000000; /* gray-700 */
         }
         .form-group input,
         .form-group textarea {
@@ -99,7 +104,7 @@
             border: 1px solid #d1d5db; /* gray-300 */
             border-radius: 6px; /* rounded-md */
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            font-size: 1rem;
+            font-size: 1.5rem;
             color: #1f2937; /* gray-900 */
         }
         .form-group input:focus,
@@ -110,7 +115,6 @@
         }
         .btn-submit {
             width: 100%;
-            
             padding: 12px 20px;
             background-color: #10b981; /* emerald-500 */
             color: #ffffff;
@@ -146,37 +150,34 @@
             background-color: #fee2e2; /* red-100 */
             color: #991b1b; /* red-800 */
         }
-        
+        .doctor-info div h2{
+            font-size: xx-large;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Book Appointment</h1>
+        <h1 class="text-5xl font-bold text-center text-gray-800 mb-6">Book Appointment</h1>
 
         <!-- Doctor Info Section -->
         <div id="doctor-info" class="doctor-info">
             <!-- Doctor image and name will be loaded here by JavaScript -->
             <img id="doctor-img" src="" alt="Doctor Image" class="doctor-img" onerror="this.onerror=null;this.src='https://placehold.co/96x96/cccccc/000000?text=No+Image';">
             <div>
-                <h2 id="doctor-name" class="text-2xl font-semibold text-gray-900"></h2>
+                <h2 id="doctor-name" ></h2>
                 <p id="doctor-details" class="text-blue-700"></p>
             </div>
-        </div>
-
-        <div class="form-group user-email-group">
-            <label for="user-email">Your Email:</label>
-            <input type="email" id="user-email" class="form-control" placeholder="Enter your email" required>
-            <!-- Removed verify button and email verification message -->
         </div>
 
         <!-- Date Selection -->
         <div class="form-group">
             <label for="appointment-date">Select Date:</label>
-            <input type="date" id="appointment-date" class="form-control" min="">
+            <input type="date" id="appointment-date" class="form-control" min="" disabled>
         </div>
 
         <!-- Available Time Slots -->
-        <h3 class="text-xl font-semibold text-gray-800 mb-4">Available Time Slots:</h3>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Available Time Slots:</h2>
         <div id="loading-slots" class="text-center text-gray-600 hidden">Loading slots...</div>
         <div id="no-slots-message" class="text-center text-gray-600 hidden">Please select a date to view availability.</div>
         <div id="time-slots-container" class="time-slot-grid">
@@ -184,12 +185,11 @@
         </div>
         <div id="slot-selection-message" class="text-center text-red-500 mt-4 hidden">Please select a time slot.</div>
 
-
         <!-- Appointment Form -->
         <form id="appointment-form" class="mt-8">
             <div class="form-group">
                 <label for="reason">Reason for Appointment:</label>
-                <textarea id="reason" rows="4" class="form-control" placeholder="Briefly describe the reason for your visit..." required></textarea>
+                <textarea id="reason" rows="4" class="form-control" placeholder="Briefly describe the reason for your visit..." required disabled></textarea>
             </div>
 
             <!-- Hidden inputs for data that comes from URL or selection -->
@@ -206,4 +206,4 @@
 
     <script src="bookAppointment.js"></script>
 </body>
-</html> -->
+</html>
