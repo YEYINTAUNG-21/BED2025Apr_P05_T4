@@ -25,7 +25,7 @@ if (loginForm) {
         localStorage.setItem('loginUser', JSON.stringify(data.user));
         localStorage.setItem('userId', data.user.id);
         localStorage.setItem('role', 'user');
-        window.location.href = 'event.html';
+        window.location.href = '../HTML/index.html';
       } else {
         alert(data.error || data.message || 'Login failed');
       }
