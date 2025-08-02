@@ -2,12 +2,19 @@ const sql = require('mssql');
 const dbConfig = require('../../db_config');
 
 <<<<<<< HEAD
+// function createUtcTimeDate(timeString) {
+//     const [hours, minutes, seconds] = timeString.split(':').map(Number);
+//     return new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds)); // Use arbitrary date
+// }
+=======
+<<<<<<< HEAD
 =======
 function createUtcTimeDate(timeString) {
     const [hours, minutes, seconds] = timeString.split(':').map(Number);
     return new Date(Date.UTC(2000, 0, 1, hours, minutes, seconds)); // Use arbitrary date
 }
 >>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
+>>>>>>> a0d2b01ec258ba15d77eca0ee5a477354846dece
 
 async function getAllDoctors(){
     let connection;
@@ -16,7 +23,7 @@ async function getAllDoctors(){
         connection = await sql.connect(dbConfig)
        const query = `
             SELECT 
-<<<<<<< HEAD
+
                 d.doctor_id,
                 d.doctor_name,
                 d.license_number,
@@ -34,7 +41,6 @@ async function getAllDoctors(){
                 d.specialty_id = s.specialty_id;
         `;
         const request = connection.request();
-=======
                 doctor_id,
                 doctor_name,
                 years_of_experience,
@@ -319,12 +325,12 @@ async function updateDoctor(){
 }
 
 
-<<<<<<< HEAD
+
 module.exports = {
   getAllDoctors,
   getDoctorById,
   updateDoctor
-=======
+
 async function getAvailbilityByDoctorId(doctorId) {
     let connection;
        try {
@@ -345,6 +351,6 @@ module.exports = {
   getDoctorByName,
   updateDoctor,
   getAvailbilityByDoctorId
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
+
  
 };
