@@ -136,20 +136,18 @@ app.get("/api/sudoku/session/:username", async (req, res) => {
     const pool = await sql.connect(config);
     const result = await pool.request()
       .input("username", sql.VarChar(100), username)
-      .query(`SELECT TOP 1 * FROM sudoku_sessions WHERE username = @username`);
+      .query("SELECT TOP 1 * FROM sudoku_sessions WHERE username = @username");
 
     if (result.recordset.length > 0) {
       const session = result.recordset[0];
 
-      // ✅ Prioritise saved board if available
-     const puzzle = session.currentState
-  ? JSON.parse(session.currentState)
-  : JSON.parse(session.puzzle);
+      const puzzle = session.current_state
+        ? JSON.parse(session.current_state)
+        : JSON.parse(session.puzzle);
 
+      const solution = JSON.parse(session.solution);  // Ensure the solution is loaded
 
-      const solution = JSON.parse(session.solution);
-
-      res.json({ puzzle, solution });
+      res.json({ puzzle, solution });  // Send both puzzle and solution
     } else {
       res.status(404).json({ message: "No saved session" });
     }
@@ -158,6 +156,7 @@ app.get("/api/sudoku/session/:username", async (req, res) => {
     res.status(500).json({ error: "Failed to load session." });
   }
 });
+
 
 
 

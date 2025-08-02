@@ -1,4 +1,3 @@
-// public/js/game.js
 let board = [];
 let originalBoard = [];
 let solution = [];
@@ -7,50 +6,58 @@ let selectedCell = null;
 
 function createBoard(puzzle) {
   const boardContainer = document.getElementById("sudoku-board");
-  boardContainer.innerHTML = "";
+  boardContainer.innerHTML = "";  // Clear previous board
 
-  board = puzzle.flat().map(v => v === null ? 0 : v);  // ✅ Always fresh puzzle
+  board = puzzle.flat().map(v => v === null ? 0 : v);  // Always fresh puzzle
   originalBoard = [...board];
 
   board.forEach((val, i) => {
-  const cell = document.createElement("input");
-  cell.maxLength = 1;
-  cell.className = "sudoku-cell";
+    const cell = document.createElement("input");
+    cell.maxLength = 1;
+    cell.className = "sudoku-cell";
 
-  // ✅ Add this line to track selected cell
-  cell.addEventListener("focus", () => {
-    selectedCell = cell;
-  });
-
-  if (originalBoard[i] !== 0) {
-    cell.value = originalBoard[i];
-    cell.disabled = true;
-    cell.style.backgroundColor = "#eee";
-  } else {
-    cell.value = val !== 0 ? val : "";
-    cell.addEventListener("input", () => {
-      const entered = parseInt(cell.value) || 0;
-      board[i] = entered;
-
-      if (solution.length > 0) {
-        if (entered === solution[i]) {
-          cell.style.backgroundColor = "#d4fcd4";
-        } else {
-          cell.style.backgroundColor = "#ffd6d6";
-        }
-
-        checkCompletion();
-      }
+    // Track selected cell
+    cell.addEventListener("focus", () => {
+      selectedCell = cell;
     });
 
-    if (val !== 0 && solution.length > 0) {
-      cell.style.backgroundColor = val === solution[i] ? "#d4fcd4" : "#ffd6d6";
-    }
-  }
+    if (originalBoard[i] !== 0) {
+      // Locked cells (part of the original puzzle, cannot be edited)
+      cell.value = originalBoard[i];
+      cell.disabled = true;
+      cell.style.backgroundColor = "#eee";
+    } else {
+      // Editable cells (for user input)
+      cell.value = val !== 0 ? val : "";
+      cell.disabled = false; // Enable the cell for user input
 
-  boardContainer.appendChild(cell);
-});
+      // Add input validation
+      cell.addEventListener("input", () => {
+        const entered = parseInt(cell.value) || 0;
+        board[i] = entered;
+
+        if (solution && solution.length > 0) {
+          // Compare entered value to solution
+          if (entered === solution[i]) {
+            cell.style.backgroundColor = "#d4fcd4";  // Correct input (green)
+          } else {
+            cell.style.backgroundColor = "#ffd6d6";  // Incorrect input (red)
+          }
+
+          checkCompletion(); // Check if the game is complete
+        }
+      });
+
+      // Pre-fill cells with correct values based on solution (after saved load)
+      if (val !== 0 && solution.length > 0) {
+        cell.style.backgroundColor = val === solution[i] ? "#d4fcd4" : "#ffd6d6";
+      }
+    }
+
+    boardContainer.appendChild(cell); // Append the cell to the board
+  });
 }
+
 async function fetchNewGame() {
   const boardContainer = document.getElementById("sudoku-board");
   boardContainer.innerHTML = "<p>Loading puzzle...</p>";
@@ -66,25 +73,9 @@ async function fetchNewGame() {
     console.error(" Error fetch puzzle:", error);
   }
 }
-async function loadSavedGame() {
-  const username = localStorage.getItem("username");
-  if (!username) return;
-
-  try {
-    const response = await axios.get(`/api/sudoku/session/${username}`);
-    const { puzzle, solution } = response.data;
-
-    createBoard(puzzle);            // puzzle = currentState or original puzzle
-    window.solution = solution;     // so input validation works
-  } catch (err) {
-    console.error("Load error:", err);
-    alert("No session found.");
-    window.location.href = "/";
-  }
-}
 
 function checkCompletion() {
-  const isComplete = board.every((val, i) => val === solution[i]);
+  const isComplete = board.every((val, i) => val === solution[i]);  // Compare board with solution
   if (isComplete) {
     setTimeout(() => {
       const username = localStorage.getItem("username") || prompt("🎉 Puzzle solved! Enter your name:");
@@ -116,9 +107,12 @@ async function saveGame() {
       username,
       puzzle: JSON.stringify(originalBoard),
       currentState: JSON.stringify(board),
-      solution: JSON.stringify(solution),
+      solution: JSON.stringify(solution),  // Make sure solution is saved
       difficulty: localStorage.getItem("difficulty") || "easy"
     });
+
+    // Store solution immediately after saving the game
+    solution = solution; // Ensure solution is available for future use
 
     alert("Game saved!");
   } catch (err) {
@@ -127,19 +121,22 @@ async function saveGame() {
   }
 }
 
-async function loadSavedGame(username) {
-  try {
-    const res = await fetch(`/api/sudoku/session/${username}`);
-    if (!res.ok) return false;
+async function loadSavedGame() {
+  const username = localStorage.getItem("username");
+  if (!username) return false;
 
-    const data = await res.json();
-    originalBoard = JSON.parse(data.puzzle);
-    board = JSON.parse(data.current_state);
-    solution = JSON.parse(data.solution);
-    createBoard(originalBoard);
+  try {
+    const response = await axios.get(`/api/sudoku/session/${username}`);
+    const { puzzle, solution: savedSolution } = response.data;
+
+    createBoard(puzzle);  // Use the saved puzzle
+    solution = savedSolution;  // Store solution for validation
+
+    console.log("Loaded saved session for", username);
     return true;
   } catch (err) {
-    console.error(" Error loading saved game :( ):", err);
+    console.error("Load error:", err);
+    alert("No session found.");
     return false;
   }
 }
