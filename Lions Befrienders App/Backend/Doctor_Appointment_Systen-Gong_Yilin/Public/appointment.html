@@ -32,22 +32,34 @@
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 36px;
+            
+            margin-bottom: 30px;
+            box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.4);
             display: flex;
-            flex-direction: column;
+            
+            flex-direction: row;
             gap: 8px;
+            
         }
+        .info{
+            max-width: 700px;
+        }
+
+       
+
         .appointment-card h3 {
+            font-size: 1.7rem;
             font-weight: 600;
             color: #1f2937;
-            margin-bottom: 4px;
+            margin-bottom: 15px;
+
         }
         .appointment-card p {
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             color: #4b5563;
-            margin-bottom: 0; /* Override default p margin */
+            margin-bottom: 8px; /* Override default p margin */
+            flex-wrap: wrap;
         }
         .appointment-card .status {
             font-weight: 600;
@@ -62,13 +74,16 @@
         .appointment-actions {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
             flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            margin-left: auto;
         }
         .appointment-actions button {
+            height: 80px;
+            
+            margin-top: 70px;
             padding: 8px 12px;
             border-radius: 6px;
-            font-size: 0.875rem;
+            font-size: 1.2rem;
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.2s;
@@ -80,15 +95,15 @@
         }
         .appointment-actions .btn-view:hover { background-color: #2563eb; }
         .appointment-actions .btn-update {
-            background-color: #f59e0b; /* amber-500 */
+            background-color: #faaf2e; /* amber-500 */
             color: white;
         }
         .appointment-actions .btn-update:hover { background-color: #d97706; }
         .appointment-actions .btn-cancel {
-            background-color: #ef4444; /* red-500 */
+            background-color: #c52f2f; /* red-500 */
             color: white;
         }
-        .appointment-actions .btn-cancel:hover { background-color: #dc2626; }
+        .appointment-actions .btn-cancel:hover { background-color: #7d1515; }
 
         .message-box {
             padding: 16px;
@@ -110,7 +125,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Your Appointments</h1>
+        <h1 class="text-5xl font-bold text-center text-gray-800 mb-6">Your Appointments</h1>
         <p id="user-info-display" class="text-center text-gray-600 mb-4"></p>
         <div id="appointments-list">
             <p class="loading-message">Loading your appointments...</p>

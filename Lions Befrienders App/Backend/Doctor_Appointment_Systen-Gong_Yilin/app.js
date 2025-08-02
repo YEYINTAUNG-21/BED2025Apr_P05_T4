@@ -39,7 +39,7 @@ app.put("/doctor/:id", DoctorController.updateDoctor);
 app.get("/api/appointments", AppointmentController.getAllAppointments); 
 app.get("/appointment/:id", AppointmentController.getAppointmentById); 
 app.get("/api/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
-app.post("/appointment",AppointmentController.createAppointment);
+app.post("/api/appointments",AppointmentController.createAppointment);
 app.put("/api/appointments/:id", AppointmentController.updateAppointment); 
 app.delete("/api/appointments/:id",AppointmentController.deleteAppointment);
 
