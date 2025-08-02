@@ -10,6 +10,7 @@ dotenv.config();
 // SignUp_Login
 const userController = require('./SignUp_Login/Controllers/UserController');
 const validateInput = require('./SignUp_Login/Middleware/ValidateInput');
+const { verifyJWT } = require('./SignUp_Login/Middleware/AuthMiddleware');
 // Hobby_Group
 const HobbyGroupController = require('./Hobby_Group_YE_YINT_AUNG/Controllers/HobbyGroupController');
 const AdminController = require('./SignUp_Login/Controllers/AdminController');
@@ -17,6 +18,9 @@ const AdminController = require('./SignUp_Login/Controllers/AdminController');
 const eventsController = require('./Virtual_Event_YE_YINT_AUNG/Controllers/eventsController');
 const adminAuth = require('./Virtual_Event_YE_YINT_AUNG/Middlewares/adminAuth');
 const validateEvent = require('./Virtual_Event_YE_YINT_AUNG/Middlewares/validateEvent');
+// Community_Post
+const communityPostController = require('./Community_Post_YE_YINT_AUNG/Controllers/CommunityPostController');
+const uploadCloudinary = require('./Community_Post_YE_YINT_AUNG/Middlewares/CloudinaryUpload');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -56,10 +60,22 @@ app.delete('/api/group-members/:member_id', HobbyGroupController.leaveGroup);
 // Virtual Community Events Routes
 app.get('/api/events', eventsController.getAllEvents);
 app.get('/api/events/:id', eventsController.getEventById);
-app.post('/api/events', adminAuth.authenticateToken, adminAuth.authorizeAdmin, validateEvent, eventsController.createEvent);
-app.put('/api/events/:id', adminAuth.authenticateToken, adminAuth.authorizeAdmin, validateEvent, eventsController.updateEvent);
-app.delete('/api/events/:id', adminAuth.authenticateToken, adminAuth.authorizeAdmin, eventsController.deleteEvent);
+app.post('/api/events', verifyJWT(['admin']), validateEvent, eventsController.createEvent);
+app.put('/api/events/:id', verifyJWT(['admin']), validateEvent, eventsController.updateEvent);
+app.delete('/api/events/:id', verifyJWT(['admin']), eventsController.deleteEvent);
 
+// Community Post Routes
+app.get('/api/posts', communityPostController.getAllPosts);
+app.get('/api/posts/:post_id', communityPostController.getPostById);
+app.post('/api/posts', verifyJWT(['user']), uploadCloudinary.single('image'), communityPostController.createPost);
+app.put('/api/posts/:post_id',
+  verifyJWT(['user']),
+  uploadCloudinary.any(), 
+  communityPostController.updatePost
+);
+app.delete('/api/posts/:post_id', verifyJWT(['user']), communityPostController.deletePost);
+app.get('/api/posts-likes', verifyJWT(['user']), communityPostController.getPostLikes);
+app.post('/api/posts/:post_id/like', verifyJWT(['user']), communityPostController.toggleLike);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');

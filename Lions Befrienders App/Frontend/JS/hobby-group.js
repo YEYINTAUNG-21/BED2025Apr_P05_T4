@@ -25,7 +25,7 @@ window.onload = async () => {
       card.href = `hobby-detail.html?group_id=${group.group_id}`;
 
       card.innerHTML = `
-        <img src="Images/${group.image_url}" alt="${group.group_name}">
+        <img src="../Images/${group.image_url}" alt="${group.group_name}">
         <h3>${group.group_name}</h3>
         <p>${group.description}</p>
         <p>${group.members} members</p>
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(res => res.json())
     .then(group => {
       console.log("Loaded group:", group); 
-      document.getElementById("groupImage").src = `Images/${group.image_url}`;
+      document.getElementById("groupImage").src = `../Images/${group.image_url}`;
       document.getElementById("groupName").textContent = group.group_name;
       document.getElementById("groupDescription").textContent = group.description;
       document.getElementById("meetupDate").textContent = new Date(group.meetup_date).toLocaleDateString();
