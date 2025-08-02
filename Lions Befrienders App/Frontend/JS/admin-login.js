@@ -25,7 +25,7 @@ if (adminLoginForm) {
         localStorage.setItem('role', 'admin');
 
         // Redirect to create event page
-        window.location.href = 'event.html';
+        window.location.href = '../HTML/index.html';
       } else {
         alert(data.message || 'Login failed.');
       }
