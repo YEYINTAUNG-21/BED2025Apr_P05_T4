@@ -24,6 +24,9 @@ if (adminLoginForm) {
         localStorage.setItem('adminUser', JSON.stringify(data.admin));
         localStorage.setItem('role', 'admin');
 
+        localStorage.removeItem('loginUser');
+        localStorage.removeItem('token');
+
         // Redirect to create event page
         window.location.href = '../HTML/index.html';
       } else {

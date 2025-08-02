@@ -1,15 +1,16 @@
 window.addEventListener('load', () => {
   const pathname = window.location.pathname;
 
-  if (pathname.endsWith('event.html')) {
+  if (pathname.includes('event.html') && !pathname.includes('create-event.html') && !pathname.includes('event-detail.html')) {
     loadEventList();
-  } else if (pathname.endsWith('event-detail.html')) {
+  } else if (pathname.includes('event-detail.html')) {
     loadEventDetail();
-  } else if (pathname.endsWith('create-event.html')) {
+  } else if (pathname.includes('create-event.html')) {
     authCheck();
     setupCreateForm();
   }
 });
+
 
 
 function authCheck() {
@@ -24,29 +25,45 @@ function authCheck() {
 async function setupCreateForm() {
   const form = document.getElementById('eventForm');
   const message = document.getElementById('message');
-  if (!form) return;
+  const heading = document.querySelector('h1');
+  const submitBtn = document.querySelector('.create-btn');
+
+  if (!form || !submitBtn || !heading) {
+    console.warn('Required form elements not found');
+    return;
+  }
 
   const urlParams = new URLSearchParams(window.location.search);
-  const eventId = urlParams.get('event_id'); // Check if editing
+  const eventId = urlParams.get('event_id'); // Edit mode check
 
   if (eventId) {
-    // Edit Mode – Pre-fill form
+    console.log('Edit mode detected, event_id =', eventId);
     try {
       const res = await fetch(`http://localhost:3000/api/events/${eventId}`);
+      console.log('Fetch status:', res.status);
       if (!res.ok) throw new Error('Failed to fetch event');
       const data = await res.json();
+      console.log('Fetched data:', data);
 
+      // Pre-fill fields
       document.getElementById('title').value = data.title || '';
       document.getElementById('description').value = data.description || '';
       document.getElementById('datetime').value = data.datetime ? new Date(data.datetime).toISOString().slice(0, 16) : '';
       document.getElementById('youtube_link').value = data.youtube_link || '';
-      document.getElementById('submit-btn').textContent = 'Update Event';
+
+      // Update UI for edit mode
+      heading.textContent = 'Update Virtual Event';
+      submitBtn.textContent = 'Update Event';
     } catch (err) {
       console.error('Failed to load event for editing:', err);
     }
+  } else {
+    // Create mode UI
+    heading.textContent = 'Create Virtual Event';
+    submitBtn.textContent = 'Create Event';
   }
 
-  // Handle form submit
+  // Submit handler
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -83,23 +100,21 @@ async function setupCreateForm() {
       });
 
       if (res.ok) {
-        if (message) {
-          message.style.color = 'green';
-          message.textContent = eventId ? 'Event updated successfully!' : 'Event created successfully!';
-        }
+        message.style.color = 'green';
+        message.textContent = eventId
+          ? 'Event updated successfully!'
+          : 'Event created successfully!';
         form.reset();
+
+
       } else {
         const err = await res.json();
-        if (message) {
-          message.style.color = 'red';
-          message.textContent = err.error || 'Failed to submit form.';
-        }
+        message.style.color = 'red';
+        message.textContent = err.error || 'Failed to submit form.';
       }
     } catch (err) {
-      if (message) {
-        message.style.color = 'red';
-        message.textContent = 'Server error. Please try again later.';
-      }
+      message.style.color = 'red';
+      message.textContent = 'Server error. Please try again later.';
       console.error(err);
     }
   });
@@ -123,7 +138,7 @@ async function loadEventDetail() {
     if (!res.ok) throw new Error('Event not found');
     const event = await res.json();
 
-    // Parse YouTube Video ID 
+    // Parse YouTube Video ID safely
     let videoId = '';
     try {
       const parsedUrl = new URL(event.youtube_link);
@@ -175,6 +190,8 @@ async function loadEventList() {
     grid.innerHTML = '';
 
     const role = localStorage.getItem('role'); // Check if admin
+    const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+    const loggedInAdminId = adminUser?.admin_id;
 
     events.forEach(event => {
       const card = document.createElement('div');
@@ -193,8 +210,7 @@ async function loadEventList() {
         <h3>${event.title}</h3>
         <p>${event.description}</p>
         <button class="learn-more-btn" onclick="window.location.href='event-detail.html?event_id=${event.event_id}'">Learn More</button>
-
-        ${role === 'admin' ? `
+        ${role === 'admin' && event.created_by_admin_id === loggedInAdminId ? `
           <div class="dropdown">
             <button class="dropdown-toggle" onclick="toggleDropdown(this)">⋮</button>
             <div class="dropdown-menu">
@@ -272,4 +288,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (adminUser) {
     createBtn.classList.remove('hidden');
   }
-});
+}); 
