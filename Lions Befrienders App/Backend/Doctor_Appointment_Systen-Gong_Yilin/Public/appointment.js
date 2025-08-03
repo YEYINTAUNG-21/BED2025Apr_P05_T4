@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <h3>Appointment with ${appointment.doctor_name}</h3>
                             <p><strong>Date:</strong> ${appointment.appointment_date.split('T')[0]}</p>
                             <p><strong>Time:</strong> ${appointment.appointment_time}</p>
-                            <p><strong>clinic address:</strong> ${appointment.clinic_address}</p>
+                            <p><strong>Clinic address:</strong> ${appointment.clinic_address}</p>
                             <p><strong>Status:</strong> <span class="status ${appointment.status}">${appointment.status}</span></p>
                             <p><strong>Reason:</strong> ${appointment.reason}</p>
                             <p class="text-xs text-gray-500 mt-2">Booked on: ${new Date(appointment.created_at).toLocaleString()}</p>

@@ -86,7 +86,7 @@ async function getDoctorsByLanguage(second_language){
 }
 
 
-//get user by id
+//get Doctor by id
 async function getDoctorById(id) {
     let connection;
 
@@ -135,135 +135,7 @@ async function getDoctorById(id) {
 
 }
 
-async function getDoctorByName(name) {
-    let connection;
-
-    try {
-        connection = await sql.connect(dbConfig);
-
-        // Modified query to join Doctors with Specialties and select the specialty name
-        const query = `
-            SELECT 
-                doctor_id,
-                doctor_name,
-                years_of_experience,
-                bio,
-                clinic_address,
-                second_language
-            FROM 
-                Doctors
-            WHERE 
-                doctor_name = @name;
-        `;
-
-        const request = connection.request();
-        request.input("name", name); // Input parameter for the doctor_id
-        const result = await request.query(query);
-
-        if (result.recordset.length === 0) {
-            return null; // Doctor not found
-        }
-
-        return result.recordset[0];
-    }
-    catch(error){
-        console.error("Database error:", error);
-        throw error;
-    }
-    finally{
-        if (connection) {
-            try {
-              await connection.close();
-            } catch (err) {
-              console.error("Error closing connection:", err);
-            }
-        }
-    }
-
-}
-
-async function getAvailabilityByDoctorIdAndDay(id) {
-    let connection;
-
-    try {
-        connection = await sql.connect(dbConfig);
-
-        // Modified query to join Doctors with Specialties and select the specialty name
-        const query = `
-            SELECT 
-                doctor_id,
-                doctor_name,
-                years_of_experience,
-                bio,
-                clinic_address,
-                second_language
-            FROM 
-                Doctors
-            WHERE 
-                doctor_name = @name;
-        `;
-
-        const request = connection.request();
-        request.input("ds", id); // Input parameter for the doctor_id
-        const result = await request.query(query);
-
-        if (result.recordset.length === 0) {
-            return null; // Doctor not found
-        }
-
-        return result.recordset[0];
-    }
-    catch(error){
-        console.error("Database error:", error);
-        throw error;
-    }
-    finally{
-        if (connection) {
-            try {
-              await connection.close();
-            } catch (err) {
-              console.error("Error closing connection:", err);
-            }
-        }
-    }
-
-}
-
-// Update doctor
-async function updateDoctor(){
-    let connection;
-
-    try{
-        connection = await sql.connect(dbConfig)
-
-        const Query = "UPDATE Users SET username = @username, email = @email WHERE id = @id;"
-        
-        const{username,email} = bookData
-        const request = connection.request()
-        request.input("id", id);
-        request.input("username",username);
-        request.input("email",email);
-
-        const result = await request.query(Query);
-
-        return await getUserById(id);
-    }
-    catch(error){
-        console.error("Database error:", error);
-        throw error;
-    }
-    finally{
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (err) {
-                console.error("Error closing connection:", err);
-            }
-        }
-    }
-}
-
-
+//Return the available time of the doctor everyday in a week
 async function getAvailbilityByDoctorId(doctorId) {
     let connection;
        try {
@@ -281,8 +153,6 @@ module.exports = {
   getAllDoctors,
   getDoctorById,
   getDoctorsByLanguage,
-  getDoctorByName,
-  updateDoctor,
   getAvailbilityByDoctorId
  
 };

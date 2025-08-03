@@ -27,14 +27,14 @@ console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
 app.post('/api/signup', validateInput.validateSignupData, userController.signup);
 app.post('/api/login', validateInput.validateLoginData, userController.login);
-app.get("/users", userController.getAllUsers); // Get all users
-app.get("/users/:id", userController.getUserById); // Get user by ID
+app.get("/api/users", userController.getAllUsers); // Get all users
+app.get("/api/users/:id", userController.getUserById); // Get user by ID
 app.get("/users/email/:email", userController.getUserByEmail); // Get user by Email
 app.delete("/users/:id", userController.deleteUserAccount); // Delete user
 
 app.get("/doctors", DoctorController.getAllDoctors); 
 app.get("/doctor/:id", DoctorController.getDoctorById); 
-app.put("/doctor/:id", DoctorController.updateDoctor); 
+ 
 
 app.get("/api/appointments", AppointmentController.getAllAppointments); 
 app.get("/appointment/:id", AppointmentController.getAppointmentById); 

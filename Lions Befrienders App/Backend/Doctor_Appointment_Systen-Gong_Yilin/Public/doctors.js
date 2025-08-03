@@ -33,7 +33,7 @@ async function fetchDoctors() {
             <h3>${doctor.doctor_name}</h3>
             <p><strong>Experience:</strong> ${doctor.years_of_experience} years</p>
             <p><strong>Clinic:</strong> ${doctor.clinic_address}</p>
-            <p><strong>Language:</strong> ${doctor.second_language}</p>
+            <p><strong>Second Language:</strong> ${doctor.second_language}</p>
             <p><strong>Bio:</strong> ${doctor.bio}</p>
             
           </div>
