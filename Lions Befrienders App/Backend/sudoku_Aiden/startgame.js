@@ -24,9 +24,12 @@ app.get("/startgame", (req, res) => {
   res.sendFile(path.join(__dirname, "views/gamestart.html"));
 });
 
+const path = require("path");
+
 app.get("/game", (req, res) => {
-  res.sendFile(path.join(__dirname, "views/game.html"));
+  res.sendFile(path.join(__dirname, "views/gamestart.html"));
 });
+
 
 app.get("/api/sudoku/generate", async (req, res) => {
   const difficulty = req.query.difficulty || "easy";
@@ -163,3 +166,4 @@ app.get("/api/sudoku/session/:username", async (req, res) => {
 app.listen(process.env.PORT || 3000, () => {
   console.log(" Server running on http://localhost:3000");
 });
+app.use('/sudoku', express.static(path.join(__dirname, 'sudoku_Aiden/public')));
