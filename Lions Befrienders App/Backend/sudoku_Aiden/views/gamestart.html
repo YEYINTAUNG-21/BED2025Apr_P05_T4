@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sudoku Leaderboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Top 10 Leaderboard</h1>
+    <ul id="leaderboard"></ul>
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <a href="/game">
+      <button onclick="localStorage.setItem('difficulty', document.getElementById('difficulty').value)">
+        Start New Game
+      </button>
+    </a>
+  </div>
+
+  <!-- About Sudoku Section -->
+  <div class="about-sudoku-container">
+    <h2>About Sudoku</h2>
+    <p>Sudoku is a classic number puzzle that helps stimulate brain activity and improve logical thinking. The goal is to fill a 9x9 grid with numbers so that each column, row, and 3x3 subgrid contains the numbers 1-9 without repetition.</p>
+    <p>Sudoku is great for aging minds because it helps sharpen memory, enhances cognitive skills, and provides a sense of accomplishment when completing puzzles. Playing Sudoku regularly can boost brain health and increase mental agility, keeping your mind active and sharp.</p>
+  </div>
+
+  <script>
+    async function loadLeaderboard() {
+      const res = await fetch('/api/sudoku/leaderboard');
+      const scores = await res.json();
+      const list = document.getElementById('leaderboard');
+      list.innerHTML = "";
+      scores.forEach((entry, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${i+1}. ${entry.username} - ${entry.score} (${entry.difficulty})`;
+        list.appendChild(li);
+      });
+    }
+    loadLeaderboard();
+  </script>
+</body>
+</html>
+<div style="text-align: center; margin-top: 20px;">
+  <button onclick="window.location.href='../frontend/HTML/index.html'" style="padding: 10px 20px; font-size: 16px;">
+    Back to Main Homepage
+  </button>
+</div>
+

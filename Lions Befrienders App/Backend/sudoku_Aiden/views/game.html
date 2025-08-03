@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sudoku Game</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Sudoku Game</h1>
+    <div id="sudoku-board"></div>
+
+    <div id="keypad">
+      <button class="keypad-btn" onclick="handleNumberInput(1)">1</button>
+      <button class="keypad-btn" onclick="handleNumberInput(2)">2</button>
+      <button class="keypad-btn" onclick="handleNumberInput(3)">3</button>
+      <button class="keypad-btn" onclick="handleNumberInput(4)">4</button>
+      <button class="keypad-btn" onclick="handleNumberInput(5)">5</button>
+      <button class="keypad-btn" onclick="handleNumberInput(6)">6</button>
+      <button class="keypad-btn" onclick="handleNumberInput(7)">7</button>
+      <button class="keypad-btn" onclick="handleNumberInput(8)">8</button>
+      <button class="keypad-btn" onclick="handleNumberInput(9)">9</button>
+      <button class="keypad-btn" onclick="handleNumberInput(0)">⌫</button>
+    </div>
+
+    <div class="action-buttons">
+      <button class="restart" onclick="fetchNewGame()">Restart</button>
+      <button class="save" onclick="saveGame()">Save Game</button>
+    </div>
+
+    
+      
+  <div class="back-button">
+    <button onclick="window.location.href='/startgame'">Quit</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/js/game.js"></script>
+</body>
+</html>
