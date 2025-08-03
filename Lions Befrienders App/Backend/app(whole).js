@@ -270,6 +270,26 @@ app.get("/api/sudoku/session/:username", async (req, res) => {
     res.status(500).json({ error: "Failed to load session." });
   }
 });
+//delete game session
+app.delete("/api/sudoku/session/:username", async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input("username", sql.VarChar(100), username)
+      .query("DELETE FROM sudoku_sessions WHERE username = @username");
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({ message: "No session found to delete." });
+    }
+
+    res.status(200).json({ message: "Session deleted successfully." });
+  } catch (err) {
+    console.error("DB Delete Error:", err);
+    res.status(500).json({ error: "Failed to delete session." });
+  }
+});
 
 // ✅ Contact Us Form
 app.use(express.urlencoded({ extended: true }));
