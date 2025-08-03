@@ -1,10 +1,8 @@
-/* Logs incoming requests */
 function logRequest(req, res, next) {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);
-    next();
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);
+  next();
 }
 
-module.exports = {
-    logRequest
-};
+
+module.exports = { logRequest};
