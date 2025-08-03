@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Emergency Logs</title>
+  <link rel="stylesheet" href="../CSS/admin-dashboard.css">
+</head>
+<body>
+  <div class="admin-container">
+    <header class="admin-header">
+      <div class="logo-title">
+        <img src="../Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo">
+        <h1>Admin Dashboard</h1>
+      </div>
+      <button class="nav-btn" onclick="window.location.href='emergency.html'">← Back to Emergency Page</button>
+    </header>
+
+    <main>
+      <h2>Emergency Logs</h2>
+      <table id="logsTable">
+        <thead>
+          <tr>
+            <th>Log ID</th>
+            <th>User ID</th>
+            <th>Timestamp</th>
+            <th>Status</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </main>
+  </div>
+
+  <script src="../JS/script.js"></script>
+</body>
+</html>

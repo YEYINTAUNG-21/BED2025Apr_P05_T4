@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Post</title>
+  <link rel="stylesheet" href="../CSS/hobby-style.css" />
+</head>
+<body>
+  <div class="create-hobby-container">
+    <header class="top-header">
+      <a href="../HTML/create-post.html" class="logo-container">
+        <img src="../Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo">
+      </a>
+      <h1>Post to Community</h1>
+    </header>
+
+    <div class="form-wrapper">
+      <a href="../HTML/community-feed.html" class="back-button">←</a>
+
+      <form id="postForm" enctype="multipart/form-data">
+        <!-- Image Upload -->
+        <div class="image-upload">
+          <div class="image-preview" id="imagePreview">
+            <span>Image</span>
+          </div>
+          <div>
+            <label for="imageInput" class="upload-btn">Upload Photo</label>
+            <input type="file" id="imageInput" name="image" accept="image/*" hidden />
+          </div>
+        </div>
+
+        <!-- Textarea -->
+        <textarea id="text" name="text" maxlength="500" placeholder="Write your message here..." required></textarea>
+        <div class="form-footer">
+          <span id="charCount">0/500</span>
+        </div>
+
+        <button type="submit" class="create-btn">Post</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../JS/community-post.js" defer></script>
+</body>
+</html>
+

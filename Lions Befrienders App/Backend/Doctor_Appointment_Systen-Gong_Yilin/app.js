@@ -1,56 +1,63 @@
-const express = require("express");
-const sql = require("mssql");
-const dotenv = require("dotenv");
-const path = require("path");
-// Load environment variables
-dotenv.config();
+require('dotenv').config();
 
-const bookController = require("./controllers/bookController");
-const userController = require("./controllers/userController"); // Note: Changed to userController for consistency
-const {
-  validateBook,
-  validateBookId,
-} = require("./middlewares/bookValidation"); // import Book Validation Middleware
+const express = require('express');
+const sql = require('mssql');
+const dotenv = require('dotenv');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+const path = require('path');
+const cors = require('cors');
 
-// Create Express app
+
+
+const DoctorController = require('./Controllers/DoctorController');
+const AppointmentController = require('./Controllers/AppointmentController');
+const userController = require('./Controllers/UserController');
+const validateInput = require('./Middleware/ValidateInput');
+//const validateInput = require('./Middleware/ValidateInput');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware (Parsing request bodies)
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
+app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
+console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
-// --- Serve static files from the 'public' directory ---
-// When a request comes in for a static file (like /index.html, /styles.css, /script.js),
-// Express will look for it in the 'public' folder relative to the project root.
-app.use(express.static(path.join(__dirname, "public")));
+app.post('/api/signup', validateInput.validateSignupData, userController.signup);
+app.post('/api/login', validateInput.validateLoginData, userController.login);
+app.get("/api/users", userController.getAllUsers); // Get all users
+app.get("/api/users/:id", userController.getUserById); // Get user by ID
+app.get("/users/email/:email", userController.getUserByEmail); // Get user by Email
+app.delete("/users/:id", userController.deleteUserAccount); // Delete user
 
-// Routes for books
-// Apply middleware *before* the controller function for routes that need it
+app.get("/api/doctors", DoctorController.getAllDoctors); 
+app.get("/api/doctor/:id", DoctorController.getDoctorById); 
+ 
 
-app.get("/books", bookController.getAllBooks);
-app.get("/books/:id", validateBookId, bookController.getBookById); // Use validateBookId middleware
-app.post("/books", validateBook, bookController.createBook); // Use validateBook middleware
-app.put("/books/:id",validateBookId,validateBook,bookController.updateBook);
-app.delete("/books/:id",validateBookId,bookController.deleteBook);
+app.get("/api/appointments", AppointmentController.getAllAppointments); 
+app.get("/api/appointment/:id", AppointmentController.getAppointmentById); 
+app.get("/api/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
+app.post("/api/appointments",AppointmentController.createAppointment);
+app.put("/api/appointments/:id", AppointmentController.updateAppointment); 
+app.delete("/api/appointments/:id",AppointmentController.deleteAppointment);
 
-app.post("/users", userController.createUser); // Create user
-app.get("/users", userController.getAllUsers); // Get all users
-app.get("/users/:id", userController.getUserById); // Get user by ID
-app.put("/users/:id", userController.updateUser); // Update user
-app.delete("/users/:id", userController.deleteUser); // Delete user
-app.get("/users/search", userController.searchUsers);
+app.get("/api/availability/:id",DoctorController.getAvailbilityByDoctorId);
+app.get("/api/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
+app.get("/api/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
 
-// Start serve
+app.get('/', (req, res) => {
+  res.send('Lions Befrienders App backend is running ');
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-// Graceful shutdown
-process.on("SIGINT", async () => {
-  console.log("Server is gracefully shutting down");
+process.on('SIGINT', async () => {
+  console.log('Server is gracefully shutting down');
   await sql.close();
-  console.log("Database connections closed");
+  console.log('Database connections closed');
   process.exit(0);
 });

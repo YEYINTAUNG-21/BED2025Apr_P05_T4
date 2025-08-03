@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doctors List</title>
+  <style>
+
+    body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 100px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+h1 {
+  font-size: 2em;
+  color: #1a73e8;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  padding:25px  20px;
+  margin-right: 100px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: larger;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #155cb0;
+}
+
+.doctor-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 70px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.doctor-img {
+  max-width: 300px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.doctor-info {
+  flex-grow: 1;
+  min-width: 200px;
+  
+  
+  
+}
+
+.doctor-info h3 {
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 2em;
+  color: #333;
+}
+
+.doctor-info p {
+  margin: 25px 0;
+  line-height: 1.4;
+  font-size: larger;
+}
+
+#message {
+  margin-top: 15px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#message.green {
+  background-color: #e6f4ea;
+  color: #0b8043;
+}
+
+#message.red {
+  background-color: #fce8e6;
+  color: #d93025;
+}
+
+  </style>
+</head>
+<body>
+  <h1>All Doctors</h1>
+  
+  
+  <div id="message"></div>
+  <div id="doctorsList">Loading doctors...</div>
+
+  <script src="doctors.js"></script> <!-- Update to correct JS file -->
+</body>
+</html>

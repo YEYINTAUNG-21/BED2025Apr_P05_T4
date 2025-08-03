@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8">
+  <title>Emergency Alert</title>
+  <link rel="stylesheet" href="../CSS/emergency.css">
+</head>
+<body> 
+  <div class="emergency-container">
+    <header class="top-header">
+      <a href="../HTML/emergency.html" class="logo-container">
+        <img src="../Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo">
+      </a>
+      <h1>Emergency Alert</h1>
+    </header>
+
+    <div class="alert-body">
+      <button id="emergencyBtn" class="emergency-button">EMERGENCY</button>
+      <p class="warning">
+        <span class="icon">⚠️</span> Press only in real emergencies
+      </p>
+    </div>
+
+    <section id="logSection" style="margin-top: 40px;">
+      <h2 style="text-align: center; margin-bottom: 20px;">Your Emergency Logs</h2>
+      <div id="logList"></div>
+    </section>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <button id="adminDashboardBtn" style="display: none; padding: 10px 20px; font-size: 16px;">Go to Admin Dashboard</button>
+    </div>
+  </div>
+
+  <script src="../JS/script.js"></script>
+</body>
+</html>
