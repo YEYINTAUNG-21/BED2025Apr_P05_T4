@@ -58,20 +58,8 @@ async function getDoctorsByLanguage(req, res) {
 
 
 
-//update a user
-async function updateDoctor(req,res) {
-    try{
-        const id = parseInt(req.params.id);
-       
-        const Doctor = await DoctorModel.updateDoctor(id,req.body);
-        res.status(201).json(Doctor);
-    }
-    catch(error){
-        console.error("Controller error:", error);
-        res.status(500).json({ error: "Error updating user" });
-    }
-}
 
+//Return the available time of the doctor everyday in a week
 async function getAvailbilityByDoctorId(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -145,7 +133,6 @@ async function getAvailableSlots(req, res) {
 module.exports = {
   getAllDoctors,
   getDoctorById,
-  updateDoctor,
   getAvailbilityByDoctorId,
   getAvailableSlots
 

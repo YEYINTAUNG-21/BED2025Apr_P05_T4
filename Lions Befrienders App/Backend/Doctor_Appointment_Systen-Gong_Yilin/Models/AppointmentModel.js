@@ -1,9 +1,9 @@
 const sql = require('mssql');
 const dbConfig = require('../../db_config');
-const { parse, compareAsc, format } = require('date-fns'); // <--- THIS LINE
+const { parse, compareAsc, format } = require('date-fns'); 
 
 
-
+// For testing, did not implemented into the appointment system
 async function getAllAppointments() {
     let connection;
     try {
@@ -45,7 +45,7 @@ async function getAllAppointments() {
     }
 }
 
-
+// For testing, did not implemented into the appointment system
 async function getAppointmentById(id) {
     let connection;
     try {
@@ -127,33 +127,6 @@ async function getAppointmentsByUserId(userId) {
         `;
 
         
-
-        // const query = `
-        //         SELECT
-        //             a.appointment_id,
-        //             a.appointment_date,
-        //             CONVERT(VARCHAR(5), a.appointment_time, 108) AS appointment_time, -- Format time to HH:MM
-        //             a.reason,
-        //             a.status,
-        //             a.created_at,
-        //             u.user_id,
-        //             u.full_name AS user_full_name,
-        //             u.email AS user_email,
-        //             d.doctor_id,
-        //             d.doctor_name,
-        //             d.clinic_address
-        //         FROM
-        //             Appointments AS a
-        //         INNER JOIN
-        //             users AS u ON a.user_id = u.user_id
-        //         INNER JOIN
-        //             Doctors AS d ON a.doctor_id = d.doctor_id
-        //         WHERE
-        //             a.user_id = @user_id
-        //         ORDER BY
-        //             a.appointment_date DESC, a.appointment_time ASC;
-        //     `;
-
 
         const request = connection.request();
         request.input("userId", sql.Int, userId); // Specify type for input parameter
@@ -328,7 +301,7 @@ async function updateAppointment(id, appointmentData) {
     }
 }
 
-
+//Delete the appointment from the database table
 async function deleteAppointment(id) {
     let connection;
     try {
@@ -355,7 +328,12 @@ async function deleteAppointment(id) {
     }
 }
 
-
+//Return appointment id and its time, based on the doctor id and date given
+//Smaple output
+    // {
+    //     "appointment_id": 2,
+    //     "appointment_time": "09:00"
+    // }
 async function getByDoctorAndDate(doctorId, date) {
     let connection;
        try {
