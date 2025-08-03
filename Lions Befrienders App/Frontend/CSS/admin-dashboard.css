@@ -1,4 +1,4 @@
-/* Reset & Body */
+
 * {
   margin: 0;
   padding: 0;
@@ -16,32 +16,36 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  position: relative;
+  padding: 20px 40px;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ccc;
 }
 
-.logo-title {
+.nav-left,
+.nav-right {
   display: flex;
   align-items: center;
-  gap: 20px;
 }
 
-.logo {
-  height: 60px;
-}
-
-.admin-header h1 {
+.dashboard-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
   font-size: 28px;
   color: #b30000;
+  white-space: nowrap;
 }
 
 /* Navigation button */
 .nav-btn {
-  padding: 10px 20px;
+  padding: 10px 16px;
   background-color: #b30000;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
 }
 
@@ -72,6 +76,7 @@ tbody tr:hover {
   background-color: #f1f1f1;
 }
 
+/* Input Fields */
 input[type="text"] {
   padding: 6px;
   width: 90%;
