@@ -1,0 +1,286 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f1f1;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.back-button {
+  display: inline-block;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: black;
+  text-decoration: none;
+}
+
+.top-header,
+.group-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.top-header h1,
+.group-detail h1 {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.top-header .logo,
+.group-detail .logo {
+  height: 40px;
+}
+
+.create-hobby-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.form-wrapper {
+  padding-top: 1rem;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+.form-footer {
+  text-align: right;
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.create-btn {
+  background: #000;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.image-upload {
+  margin-bottom: 1rem;
+}
+
+.image-preview {
+  background: #ccc;
+  height: 180px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-btn {
+  background: #000;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.members-section {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.member-list .post {
+  background: #b6ef9d;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.post {
+  background-color: #b2f2bb;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 600px;
+  position: relative;
+  list-style: none;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  flex-direction: column;
+}
+
+.post-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.post .username {
+  font-weight: bold;
+}
+
+.post .timestamp {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 4px;
+}
+
+.post img {
+  width: 100%;
+  border-radius: 10px;
+  margin: 8px 0;
+}
+
+.post .text {
+  margin-bottom: 8px;
+}
+
+
+.post-footer {
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+  margin-top: 10px;
+}
+
+.menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.menu-options {
+  position: absolute;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  min-width: 100px;
+}
+
+.menu-options button {
+  background-color: transparent;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+}
+
+.menu-options button:hover {
+  background-color: #f0f0f0;
+}
+
+.hidden {
+  display: none;
+}
+
+.heart-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.heart-icon.liked i {
+  color: red;
+}
+.heart-icon i {
+  color: black;
+}
+
+
+.heart-icon:hover i {
+  transform: scale(1.1);
+}
+
+.create-post-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #000;
+  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 56px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.create-post-btn:hover {
+  background-color: #333;
+}
+
+
+

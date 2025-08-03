@@ -4,12 +4,24 @@ const dotenv = require('dotenv');
 const path = require('path');
 const multer = require('multer');
 const cors = require('cors');
+const axios = require("axios");
 
 dotenv.config();
+const config = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
+  options: {
+    encrypt: true,
+    trustServerCertificate: true
+  }
+};
 
 // SignUp_Login
 const userController = require('./SignUp_Login/Controllers/UserController');
 const validateInput = require('./SignUp_Login/Middleware/ValidateInput');
+const { verifyJWT } = require('./SignUp_Login/Middleware/AuthMiddleware');
 // Hobby_Group
 const HobbyGroupController = require('./Hobby_Group_YE_YINT_AUNG/Controllers/HobbyGroupController');
 const AdminController = require('./SignUp_Login/Controllers/AdminController');
@@ -17,6 +29,9 @@ const AdminController = require('./SignUp_Login/Controllers/AdminController');
 const eventsController = require('./Virtual_Event_YE_YINT_AUNG/Controllers/eventsController');
 const adminAuth = require('./Virtual_Event_YE_YINT_AUNG/Middlewares/adminAuth');
 const validateEvent = require('./Virtual_Event_YE_YINT_AUNG/Middlewares/validateEvent');
+// Community_Post
+const communityPostController = require('./Community_Post_YE_YINT_AUNG/Controllers/CommunityPostController');
+const uploadCloudinary = require('./Community_Post_YE_YINT_AUNG/Middlewares/CloudinaryUpload');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -56,10 +71,22 @@ app.delete('/api/group-members/:member_id', HobbyGroupController.leaveGroup);
 // Virtual Community Events Routes
 app.get('/api/events', eventsController.getAllEvents);
 app.get('/api/events/:id', eventsController.getEventById);
-app.post('/api/events', adminAuth.authenticateToken, adminAuth.authorizeAdmin, validateEvent, eventsController.createEvent);
-app.put('/api/events/:id', adminAuth.authenticateToken, adminAuth.authorizeAdmin, validateEvent, eventsController.updateEvent);
-app.delete('/api/events/:id', adminAuth.authenticateToken, adminAuth.authorizeAdmin, eventsController.deleteEvent);
+app.post('/api/events', verifyJWT(['admin']), validateEvent, eventsController.createEvent);
+app.put('/api/events/:id', verifyJWT(['admin']), validateEvent, eventsController.updateEvent);
+app.delete('/api/events/:id', verifyJWT(['admin']), eventsController.deleteEvent);
 
+// Community Post Routes
+app.get('/api/posts', communityPostController.getAllPosts);
+app.get('/api/posts/:post_id', communityPostController.getPostById);
+app.post('/api/posts', verifyJWT(['user']), uploadCloudinary.single('image'), communityPostController.createPost);
+app.put('/api/posts/:post_id',
+  verifyJWT(['user']),
+  uploadCloudinary.any(), 
+  communityPostController.updatePost
+);
+app.delete('/api/posts/:post_id', verifyJWT(['user']), communityPostController.deletePost);
+app.get('/api/posts-likes', verifyJWT(['user']), communityPostController.getPostLikes);
+app.post('/api/posts/:post_id/like', verifyJWT(['user']), communityPostController.toggleLike);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
@@ -74,4 +101,134 @@ process.on('SIGINT', async () => {
   await sql.close();
   console.log('Database connections closed');
   process.exit(0);
+});
+
+
+// ✅ Serve the Sudoku game UI
+app.use('/sudoku', express.static(path.join(__dirname, 'sudoku_Aiden/public')));
+app.use(express.json());
+// Game route now loads game.html
+app.get("/game", (req, res) => {
+  res.sendFile(path.join(__dirname, "sudoku_Aiden/views/game.html"));
+});
+
+// Old start screen now moved to /gamestart
+app.get("/gamestart", (req, res) => {
+  res.sendFile(path.join(__dirname, "sudoku_Aiden/views/gamestart.html"));
+});
+
+
+// ✅ Generate new puzzle
+app.get("/api/sudoku/generate", async (req, res) => {
+  const difficulty = req.query.difficulty || "easy";
+  const url = `https://api.api-ninjas.com/v1/sudokugenerate?difficulty=${difficulty}`;
+  const key = process.env.API_NINJAS_KEY;
+
+  try {
+    const response = await axios.get(url, {
+      headers: { 'X-Api-Key': key }
+    });
+
+    res.json({
+      puzzle: response.data.puzzle,
+      solution: response.data.solution
+    });
+
+  } catch (error) {
+    console.error("API request failed:", error);
+    res.status(500).json({ error: "Failed to generate puzzle" });
+  }
+});
+
+// ✅ Save score
+app.post("/api/sudoku/score", async (req, res) => {
+  try {
+    const { username, score, difficulty } = req.body;
+
+    const pool = await sql.connect(config);
+    await pool.request()
+      .input("username", sql.VarChar(100), username)
+      .input("score", sql.Int, score)
+      .input("difficulty", sql.VarChar(20), difficulty)
+      .query(`
+        INSERT INTO leaderboard_scores (username, score, difficulty)
+        VALUES (@username, @score, @difficulty)
+      `);
+
+    res.status(200).json({ message: "Score submitted successfully." });
+  } catch (err) {
+    console.error("DB Insert Error:", err);
+    res.status(500).json({ error: "Failed to save score." });
+  }
+});
+
+// ✅ Get leaderboard
+app.get("/api/sudoku/leaderboard", async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query(
+      "SELECT TOP 10 * FROM leaderboard_scores ORDER BY score DESC, created_at ASC"
+    );
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("Leaderboard error:", err);
+    res.status(500).send("Failed to load leaderboard");
+  }
+});
+
+// ✅ Save game session
+app.post("/api/sudoku/save", async (req, res) => {
+  const { username, puzzle, currentState, solution, difficulty } = req.body;
+  try {
+    const pool = await sql.connect(config);
+    await pool.request()
+      .input("username", sql.VarChar(100), username)
+      .input("puzzle", sql.NVarChar(sql.MAX), puzzle)
+      .input("currentState", sql.NVarChar(sql.MAX), currentState)
+      .input("solution", sql.NVarChar(sql.MAX), solution)
+      .input("difficulty", sql.VarChar(20), difficulty)
+      .query(`
+        MERGE sudoku_sessions AS target
+        USING (SELECT @username AS username) AS source
+        ON target.username = source.username
+        WHEN MATCHED THEN
+          UPDATE SET puzzle = @puzzle, current_state = @currentState, solution = @solution, difficulty = @difficulty, updated_at = GETDATE()
+        WHEN NOT MATCHED THEN
+          INSERT (username, puzzle, current_state, solution, difficulty)
+          VALUES (@username, @puzzle, @currentState, @solution, @difficulty);
+      `);
+
+    res.status(200).json({ message: "Session saved" });
+  } catch (err) {
+    console.error("DB Save Error:", err);
+    res.status(500).json({ error: "Failed to save session." });
+  }
+});
+
+// ✅ Load game session
+app.get("/api/sudoku/session/:username", async (req, res) => {
+  const { username } = req.params;
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+      .input("username", sql.VarChar(100), username)
+      .query("SELECT TOP 1 * FROM sudoku_sessions WHERE username = @username");
+
+    if (result.recordset.length > 0) {
+      const session = result.recordset[0];
+
+      const puzzle = session.current_state
+        ? JSON.parse(session.current_state)
+        : JSON.parse(session.puzzle);
+
+      const solution = JSON.parse(session.solution);
+
+      res.json({ puzzle, solution });
+    } else {
+      res.status(404).json({ message: "No saved session" });
+    }
+  } catch (err) {
+    console.error("DB Load Error:", err);
+    res.status(500).json({ error: "Failed to load session." });
+  }
 });

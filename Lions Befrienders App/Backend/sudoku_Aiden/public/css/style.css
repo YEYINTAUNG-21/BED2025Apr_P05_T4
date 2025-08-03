@@ -1,0 +1,320 @@
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container */
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Title */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Leaderboard Styling */
+#leaderboard {
+  background-color: #2196F3;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  list-style-type: none;
+  font-family: 'Arial', sans-serif;
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 80%;
+  margin-bottom: 20px;
+}
+
+#leaderboard li {
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+#leaderboard li:last-child {
+  border-bottom: none;
+}
+
+/* Difficulty Slider */
+#difficulty {
+  font-size: 1.1rem;
+  padding: 10px;
+  width: 80%;
+  max-width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#difficulty:focus {
+  border-color: #2196F3;
+  background-color: #e9f7fc;
+}
+
+/* Start Game Button */
+button {
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #1976d2;
+}
+
+/* About Sudoku Section Container */
+.about-sudoku-container {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto;  /* Center the About Sudoku section */
+  width: 100%;  /* Ensures it doesn't stretch unnecessarily */
+}
+
+/* About Sudoku Heading */
+.about-sudoku-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* About Sudoku Paragraph */
+.about-sudoku-container p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 500px) {
+  #keypad {
+    max-width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .keypad-btn {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .action-buttons button {
+    font-size: 1rem;
+    padding: 12px 16px;
+  }
+
+  .container {
+    padding: 20px 15px;
+  }
+}
+
+
+/* Sudoku Grid */
+#sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 2px;
+  margin: 0 auto 20px;
+  max-width: 450px;
+}
+
+.sudoku-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #ccc;
+  background-color: #fefefe;
+  box-sizing: border-box;
+  outline: none;
+  transition: background-color 0.2s, border 0.2s;
+}
+
+/* Bold grid lines for 3x3 Sudoku sections */
+#sudoku-board .sudoku-cell:nth-child(3n) {
+  border-right: 3px solid #000;
+}
+
+#sudoku-board .sudoku-cell:nth-child(9n + 1) {
+  border-left: 3px solid #000;
+}
+
+#sudoku-board .sudoku-cell:nth-child(-n + 9) {
+  border-top: 3px solid #000;
+}
+
+#sudoku-board .sudoku-cell:nth-child(n + 28):nth-child(-n + 36),
+#sudoku-board .sudoku-cell:nth-child(n + 55):nth-child(-n + 63) {
+  border-top: 3px solid #000;
+}
+
+#sudoku-board .sudoku-cell:nth-child(n + 73):nth-child(-n + 81) {
+  border-bottom: 3px solid #000;
+}
+
+.sudoku-cell:disabled {
+  background-color: #eee;
+  color: #555;
+}
+
+/* Keypad Layout */
+#keypad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  gap: 12px;
+  margin: 20px auto 10px;
+  max-width: 450px;
+  justify-items: center;
+}
+
+/* Button Styling */
+.keypad-btn {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 10px;
+  background: #e0e0e0;
+  border: 2px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  color: black;
+}
+
+.keypad-btn:hover {
+  background-color: #d4d4d4;
+}
+
+.keypad-btn:active {
+  background-color: #b8b8b8;
+}
+
+/* Restart Button */
+.keypad-btn.restart {
+  background-color: #ffb74d;
+  color: black;
+  border: 2px solid #fb8c00;
+}
+
+.keypad-btn.restart:hover {
+  background-color: #fb8c00;
+}
+
+.keypad-btn.restart:active {
+  background-color: #f57c00;
+}
+
+/* Save Game Button */
+.keypad-btn.save {
+  background-color: #81c784;
+  color: black;
+  border: 2px solid #66bb6a;
+}
+
+.keypad-btn.save:hover {
+  background-color: #66bb6a;
+}
+
+.keypad-btn.save:active {
+  background-color: #388e3c;
+}
+
+/* Action Buttons (Restart and Save Game) */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.action-buttons button {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 48%; /* Button width */
+}
+
+.action-buttons button:hover {
+  background-color: #1976d2;
+}
+
+.action-buttons button:active {
+  background-color: #1565c0;
+}
+
+/* Back Button */
+.back-button {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.back-button button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff6666;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button button:hover {
+  background-color: #cc0000;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 500px) {
+  #keypad {
+    max-width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .keypad-btn {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .action-buttons button {
+    font-size: 1rem;
+    padding: 12px 16px;
+  }
+
+  .container {
+    padding: 20px 15px;
+  }
+}

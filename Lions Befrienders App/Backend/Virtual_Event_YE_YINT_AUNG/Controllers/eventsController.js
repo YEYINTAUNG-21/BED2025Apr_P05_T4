@@ -17,27 +17,6 @@ async function fetchYoutubeVideoDetails(videoId) {
     };
 }
 
-async function searchYoutubeVideos(keyword) {
-    const url = 'https://www.googleapis.com/youtube/v3/search'
-    const params = {
-        part: 'snippet',
-        q: keyword,
-        type: 'video',
-        maxResults: 10,
-        key: YOUTUBE_API_KEY
-    };
-
-    const response = await axios.get(url, {params});
-    return response.data.items.map(item => ({
-        videoId: item.id.videoId,
-        title: item.snippet.title,
-        description: item.snippet.description,
-        thumbnail: item.snippet.thumbnails.medium.url,
-        channelTitle: item.snippet.channelTitle,
-        publishedTime: item.snippet.publishedAt
-    }))
-}
-
 async function getAllEvents(req, res) {
     try {
         const events = await EventsModel.getAllEvents();
@@ -88,14 +67,27 @@ async function createEvent(req, res) {
 
 async function updateEvent(req, res) {
   try {
+    const event_id = req.params.id;
+    const loggedInAdminId = req.user.admin_id;
+
+    const existingEvent = await EventsModel.getEventById(event_id);
+    if (!existingEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    if (existingEvent.created_by_admin_id !== loggedInAdminId) {
+      return res.status(403).json({ error: 'You can only update your own events' });
+    }
+
     const { title, description, datetime, youtube_link } = req.body;
     const urlParams = new URL(youtube_link).searchParams;
     const videoId = urlParams.get('v');
     if (!videoId) {
       return res.status(400).json({ error: 'Invalid YouTube link' });
     }
+
     const { thumbnail, video_title, duration } = await fetchYoutubeVideoDetails(videoId);
-    await EventsModel.updateEvent(req.params.id, {
+    await EventsModel.updateEvent(event_id, {
       title,
       description,
       datetime,
@@ -103,8 +95,9 @@ async function updateEvent(req, res) {
       thumbnail,
       video_title,
       duration,
-      created_by_admin_id: req.user.id
+      created_by_admin_id: loggedInAdminId // still updating with same ID
     });
+
     res.json({ message: 'Event updated successfully' });
   } catch (error) {
     console.error('Update Event Error:', error);
@@ -112,27 +105,30 @@ async function updateEvent(req, res) {
   }
 }
 
+
 async function deleteEvent(req, res) {
-    try {
-        await EventsModel.deleteEvent(req.params.id);
-        res.json({ message: 'Event deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete event' });
+  try {
+    const event_id = req.params.id;
+    const loggedInAdminId = req.user.admin_id;
+
+    const existingEvent = await EventsModel.getEventById(event_id);
+    if (!existingEvent) {
+      return res.status(404).json({ error: 'Event not found' });
     }
+
+    if (existingEvent.created_by_admin_id !== loggedInAdminId) {
+      return res.status(403).json({ error: 'You can only delete your own events' });
+    }
+
+    await EventsModel.deleteEvent(event_id);
+    res.json({ message: 'Event deleted successfully' });
+  } catch (error) {
+    console.error('Delete Event Error:', error);
+    res.status(500).json({ error: 'Failed to delete event' });
+  }
 }
 
-async function searchVideosHandler(req, res) {
-    try {
-        const keyword = req.query.q;
-        if (!keyword) {
-            return res.status(400).json({ error: 'Keyword is required' });
-        }
-        const videos = await searchYoutubeVideos(keyword);
-        res.json(videos);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to search videos' });
-    }
-}
+
 
 module.exports = {
     getAllEvents,
@@ -140,5 +136,4 @@ module.exports = {
     createEvent,
     updateEvent,
     deleteEvent,
-    searchVideosHandler
 };

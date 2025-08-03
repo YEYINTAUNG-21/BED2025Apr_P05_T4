@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="../CSS/edit-profile.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="profile-container">
+    <header class="top-header">
+      <a href="../HTML/index.html" class="logo-container">
+        <img
+          src="../Images/Lion_Befrienders_Logo.png"
+          alt="Lion Befrienders Logo"
+          class="logo"
+        />
+      </a>
+      <h1>Edit Senior Profile</h1>
+    </header>
+
+    <form class="profile-box" id="editProfileForm">
+      <div class="form-row">
+        <label class="profile-item" for="fullName">
+          Full Name:
+          <input type="text" id="fullName" name="fullName" required />
+        </label>
+
+        <label class="profile-item" for="email">
+          Email:
+          <input type="email" id="email" name="email" required />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="profile-item" for="phoneNumber">
+          Phone Number:
+          <input type="tel" id="phoneNumber" name="phoneNumber" required />
+        </label>
+
+        <label class="profile-item" for="dob">
+          Date of Birth:
+          <input type="date" id="dob" name="dob" required />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="profile-item" for="gender">
+          Gender:
+          <select id="gender" name="gender" required>
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label class="profile-item" for="language">
+          Preferred Language:
+          <input type="text" id="language" name="language" />
+        </label>
+      </div>
+
+      <div class="form-row full-width">
+        <label class="profile-item" for="address">
+          Address:
+          <textarea id="address" name="address" rows="3"></textarea>
+        </label>
+      </div>
+
+      <div class="profile-buttons">
+        <button type="submit">Save Changes</button>
+        <button type="button" onclick="window.location.href='profile.html'">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script src="../JS/script.js"></script>
+</body>
+</html>

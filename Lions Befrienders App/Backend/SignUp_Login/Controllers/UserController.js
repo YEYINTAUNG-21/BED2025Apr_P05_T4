@@ -100,7 +100,7 @@ async function signup(req, res) {
 
     // 4. Issue JWT
     const token = jwt.sign(
-      { userId: newUser.user_id, email: newUser.email },
+      { userId: newUser.user_id, email: newUser.email, role: 'user' },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -167,7 +167,7 @@ async function login(req, res) {
 
     // 3. Issue JWT
     const token = jwt.sign(
-      { userId: User.user_id, email: User.email },
+      { userId: User.user_id, email: User.email, role : 'user' },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
