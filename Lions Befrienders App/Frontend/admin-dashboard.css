@@ -12,26 +12,37 @@ body {
 }
 
 /* Header */
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.top-header {
+  position: relative;
   margin-bottom: 40px;
+  padding-top: 0;
+  padding-left: 0;
 }
 
-.logo-title {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.logo-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.logo-container {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
 .logo {
   height: 60px;
+  display: block;
 }
 
-.admin-header h1 {
-  font-size: 28px;
+.dashboard-title {
+  text-align: center;
+  font-size: 32px;
   color: #b30000;
+  margin-top: 10px;
 }
 
 /* Navigation button */
@@ -92,4 +103,32 @@ button {
 
 button:hover {
   background-color: #800000;
+}
+
+/* Tab Navigation */
+.tab-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #f8d7da;
+  color: #b30000;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab-btn.active {
+  background-color: #b30000;
+  color: white;
+}
+
+.tab-btn:hover {
+  background-color: #800000;
+  color: white;
 }

@@ -1,12 +1,13 @@
-// routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const authController = require('../Controllers/authController');
 
-// Login Route
-router.post('/api/login', authController.loginUser);  // <-- /api/login
+const userController = require('../../SignUp_Login/Controllers/userController'); // Adjust path as per folder structure
+const { validateSignupData, validateLoginData } = require('../../SignUp_Login/Middleware/validateInput');
 
-// Register Route
-router.post('/api/signup', authController.registerUser);
+// Signup route with validation middleware
+router.post('/signup', validateSignupData, userController.signup);
+
+// Login route with validation middleware
+router.post('/login', validateLoginData, userController.login);
 
 module.exports = router;

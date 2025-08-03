@@ -7,11 +7,11 @@ const {
 
 // POST: Create a new emergency alert
 const handleEmergencyRequest = async (req, res) => {
-  const userId = req.user.userId; // Extract user ID from JWT payload set in authMiddleware
-  if (!userId) return res.status(401).json({ message: "User not authenticated" });
+  const user_id = req.user.user_id; // Extract user ID from JWT payload set in authMiddleware
+  if (!user_id) return res.status(401).json({ message: "User not authenticated" });
 
   try {
-    await logEmergencyAlert(userId);
+    await logEmergencyAlert(user_id);
     res.status(201).json({ message: "Emergency alert logged successfully" });
   } catch (err) {
     console.error("Error logging emergency alert:", err);

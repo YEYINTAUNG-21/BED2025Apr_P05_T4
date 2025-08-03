@@ -1,13 +1,12 @@
-const sql = require('mssql');
-const dbConfig = require('../../db_config');
-console.log('Connecting to DB with config:', dbConfig)
+const { sql, config } = require('../../dbConfig');
+console.log('Connecting to DB with config:', config)
 
 
 async function getAllUsers(){
     let connection;
 
     try{
-        connection = await sql.connect(dbConfig)
+        connection = await sql.connect(config)
         query ="SELECT * FROM Users"
         const request = connection.request();
         result = await request.query(query);
@@ -34,7 +33,7 @@ async function getUserById(id){
     let connection;
 
     try{
-       connection = await sql.connect(dbConfig);
+       connection = await sql.connect(config);
         const query = "SELECT * FROM users WHERE user_id = @id";
         const request = connection.request();
         request.input("id", id);
@@ -67,7 +66,7 @@ async function getUserById(id){
 async function createUser({full_name, email, phone_number, password_hash, date_of_birth, gender, language, address}) {
     let connection;
     try {
-        connection = await sql.connect(dbConfig);
+        connection = await sql.connect(config);
         const request = connection.request()
             .input('full_name', sql.VarChar(100), full_name)
             .input('email', sql.VarChar(100), email)
@@ -130,7 +129,7 @@ async function createUser({full_name, email, phone_number, password_hash, date_o
 async function getUserByEmail(email) {
     let connection;
     try {
-        connection= await sql.connect(dbConfig);
+        connection= await sql.connect(config);
         const result = await connection.request()
             .input('email', sql.VarChar(100), email)
             .query(`
@@ -152,7 +151,7 @@ async function getUserByEmail(email) {
 async function getUserByPhoneNumber(phoneNumber) {
     let connection
     try {
-        connection = await sql.connect(dbConfig);
+        connection = await sql.connect(config);
         const request = connection.request();
         request.input('phone_number', sql.VarChar(20), phoneNumber); // Ensure type and length match DB schema
         const result = await request.query(`
@@ -185,7 +184,7 @@ async function getUserByPhoneNumber(phoneNumber) {
 async function deleteUser(userId) {
     let connection;
     try {
-        connection= await sql.connect(dbConfig);
+        connection= await sql.connect(config);
         const request = connection.request();
         request.input('user_id', sql.Int, userId);
 

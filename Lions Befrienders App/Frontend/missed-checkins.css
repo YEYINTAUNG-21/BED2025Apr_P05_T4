@@ -1,0 +1,136 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding: 0;
+  margin: 0;
+}
+
+.top-header {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.logo {
+  height: 50px;
+}
+
+.top-header h1 {
+  font-size: 24px;
+  color: #333;
+}
+
+/* Add spacing and color to icons in table headers */
+th i {
+  margin-right: 8px;
+  color: #007bff; /* nice blue for headers */
+}
+
+/* Main container */
+.missed-checkins-container {
+  padding: 30px 40px;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: #f1f1f1;
+}
+
+th, td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+}
+
+th {
+  color: #333;
+}
+
+td {
+  color: #555;
+}
+
+/* Action buttons */
+td button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 18px;
+  vertical-align: middle;
+  padding: 4px;
+}
+
+td button i {
+  pointer-events: none; /* so clicking button works as normal */
+}
+
+/* Colored icons for action buttons */
+button.resolve-btn i {
+  color: green;
+}
+
+button.note-btn i {
+  color: orange;
+}
+
+button.delete-btn i {
+  color: red;
+}
+
+td button:hover i {
+  opacity: 0.7;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .top-header h1 {
+    font-size: 18px;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  background-color: #b30000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.nav-btn:hover {
+  background-color: #800000;
+}

@@ -114,30 +114,39 @@ async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    // 1. Lookup user by email
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
     const User = await UserModel.getUserByEmail(email);
+
     if (!User) {
       return res.status(401).json({ message: 'Invalid credentials for email' });
     }
 
-    // 2. Verify password
-    const match = await bcrypt.compare(password, User.password_Hash);
+    // Handle both cases of password casing safely
+    const hashedPassword = User.password_Hash || User.password_hash;
+
+    if (!hashedPassword) {
+      return res.status(500).json({ message: 'Password hash missing from database' });
+    }
+
+    const match = await bcrypt.compare(password, hashedPassword);
+
     if (!match) {
       return res.status(401).json({ message: 'Invalid credentials for password' });
     }
 
-    // 3. Issue JWT
     const token = jwt.sign(
-      { userId: User.user_id, email: User.email },
+      { user_id: User.user_id, email: User.email, role: User.role },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    
     res.status(200).json({
       message: 'Login successful',
       token,
-     user: {
+      user: {
         id: User.user_id,
         full_name: User.full_name,
         email: User.email,

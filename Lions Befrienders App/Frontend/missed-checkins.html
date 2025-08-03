@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Missed Check-ins</title>
+  <link rel="stylesheet" href="missed-checkins.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <header class="top-header">
+    <a href="admin-dashboard.html" class="logo-container">
+      <img
+        src="Images/Lion_Befrienders_Logo.png"
+        alt="Lion Befrienders Logo"
+        class="logo"
+      />
+    </a>
+    <h1>Missed Check-ins</h1>
+    <button class="nav-btn" onclick="window.location.href='admin-dashboard.html'" style="margin-left:auto;">← Back to Dashboard</button>
+  </header>
+
+  <main class="missed-checkins-container">
+    <table id="missedCheckinsTable">
+      <thead>
+        <tr>
+          <th><i class="fas fa-user"></i> Senior Name</th>
+          <th><i class="fas fa-calendar-day"></i> Last Check-in</th>
+          <th><i class="fas fa-hourglass-half"></i> Days Missed</th>
+          <th><i class="fas fa-info-circle"></i> Status</th>
+          <th><i class="fas fa-sticky-note"></i> Notes</th>
+          <th><i class="fas fa-gear"></i> Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be dynamically filled by missed-checkins.js -->
+      </tbody>
+    </table>
+  </main>
+
+  <script src="missed-checkins.js"></script>
+</body>
+</html>
