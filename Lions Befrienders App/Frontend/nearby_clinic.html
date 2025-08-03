@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clinic Finder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+
+  />
+  <link rel="stylesheet" href="nearby_clinic_style.css" />
+
+  <script src="NearbyClinicScript.js" defer></script>
+  <script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMLjNuR6e7RAqMLuNvreMZkaDlj3O_60I&callback=initMap"
+  ></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-light border-bottom">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <img src="Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo" height="40">
+        <span class="fw-bold fs-4">Nearby Clinics</span>
+      </a>
+      <div class="d-flex align-items-center gap-4 me-2">
+        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="#">About</a>
+        <a class="nav-link" href="#">Help</a>
+        <a class="nav-link" href="#">Contact</a>
+        <span class="nav-link fw-bold">👤</span>
+      </div>
+    </div>
+  </nav>
+
+  <h1 class="mt-4">Nearby Clinics</h1>
+  <div id="map"></div>
+
+  <button onclick="toggleFavorites()">Show Favorites</button>
+
+  <div id="favorites-popup" class="popup hidden">
+    <h3>Favorited Clinics</h3>
+    <table id="favorites-table" class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Clinic</th>
+          <th>Rating</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn btn-secondary" onclick="toggleFavorites()">Close</button>
+  </div>
+
+  <div id="clinic-popup" class="popup hidden">
+    <button id="close-popup" onclick="closePopup()">×</button>
+    <div id="clinic-popup-content"></div>
+  </div>
+</body>
+</html>

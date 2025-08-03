@@ -1,0 +1,112 @@
+/* Global Styles */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  text-align: center;
+  background-color: #f8f9fa;
+  color: #0b0b0b;
+}
+
+/* Map Styling */
+#map {
+  width: 100%;
+  height: 60vh;
+  margin-bottom: 1rem;
+}
+
+/* Utility */
+.hidden {
+  display: none;
+}
+
+/* Table */
+table {
+  width: 90%;
+  margin: 1em auto;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: 10px;
+  border: 1px solid #ccc;
+  color: #0b0b0b;
+}
+
+/* Popup box */
+.popup {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #a1df8b;
+  padding: 20px;
+  border: 1px solid #4b6f3b;
+  border-radius: 8px;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 350px;
+  color: #0b0b0b;
+  font-size: 1rem;
+}
+
+.popup.visible {
+  display: block;
+}
+
+/* Close (X) Button in popup */
+#close-popup {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #0b0b0b;
+  cursor: pointer;
+  line-height: 1;
+}
+
+#close-popup:hover {
+  color: #3a6d12;
+}
+
+/* Button Styling */
+button {
+  background-color: #a1df8b;
+  color: #000;
+  border: 2px solid #4b6f3b;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #94cc7a;
+}
+
+.btn {
+  background-color: #a1df8b !important;
+  border-color: #4b6f3b !important;
+  color: #000 !important;
+}
+
+.btn:hover {
+  background-color: #94cc7a !important;
+  color: #000 !important;
+}
+
+
+.navbar {
+  background-color: #a1df8b !important;
+  border-bottom: 2px solid #4b6f3b;
+}
+
+.navbar-brand,
+.nav-link {
+  color: #0b0b0b !important;
+  font-weight: 600;
+}
