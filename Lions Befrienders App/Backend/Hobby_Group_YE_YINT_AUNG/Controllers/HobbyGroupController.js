@@ -19,11 +19,14 @@ async function createHobbyGroup(req, res) {
       meetup_date,
       meetup_time,
       meetup_location,
-      created_by_admin_id
     } = req.body;
 
     const image_url = req.file ? req.file.filename : null;
 
+    const created_by_admin_id = req.admin?.admin_id;
+    if (!created_by_admin_id) {
+      return res.status(403).json({ error: 'Admin ID missing from token' });
+    }
     await HobbyGroupModel.insertGroup({
       group_name,
       description,

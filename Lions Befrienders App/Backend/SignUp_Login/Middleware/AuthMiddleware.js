@@ -13,7 +13,11 @@ function verifyJWT(allowedRoles = []) {
             if (allowedRoles.length && !allowedRoles.includes(decoded.role)) {
                 return res.status(403).json({ message: 'Forbidden: You do not have permission to access this resource.' });
             }
-            req.user = decoded;
+            if (decoded.role === 'admin') {
+                req.admin = decoded;
+            } else {
+                req.user = decoded;
+            }
             next();
         } catch (error) {
             console.error('JWT verification error:', error);

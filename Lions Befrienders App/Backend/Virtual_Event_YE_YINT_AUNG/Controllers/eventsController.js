@@ -56,7 +56,7 @@ async function createEvent(req, res) {
       thumbnail,
       video_title,
       duration,
-      created_by_admin_id: req.user.admin_id
+      created_by_admin_id: req.admin.admin_id
     });
     res.status(201).json({ message: 'Event created successfully' });
   } catch (error) {
@@ -68,7 +68,7 @@ async function createEvent(req, res) {
 async function updateEvent(req, res) {
   try {
     const event_id = req.params.id;
-    const loggedInAdminId = req.user.admin_id;
+    const loggedInAdminId = req.admin.admin_id;
 
     const existingEvent = await EventsModel.getEventById(event_id);
     if (!existingEvent) {
@@ -109,7 +109,7 @@ async function updateEvent(req, res) {
 async function deleteEvent(req, res) {
   try {
     const event_id = req.params.id;
-    const loggedInAdminId = req.user.admin_id;
+    const loggedInAdminId = req.admin.admin_id;
 
     const existingEvent = await EventsModel.getEventById(event_id);
     if (!existingEvent) {
