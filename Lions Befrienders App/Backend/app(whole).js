@@ -50,7 +50,7 @@ const upload = multer({ storage: storage });
 
 // Hobby Group
 app.get('/api/hobby-groups', HobbyGroupController.getHobbyGroups);
-app.post('/api/hobby-groups', upload.single('groupImage'), HobbyGroupController.createHobbyGroup);
+app.post('/api/hobby-groups',  verifyJWT(['admin']), upload.single('groupImage'), HobbyGroupController.createHobbyGroup);
 app.get('/api/hobby-groups/:id', HobbyGroupController.getHobbyGroupById);
 app.get('/api/group-members/:group_id', HobbyGroupController.getGroupMember);
 app.post('/api/group-members', HobbyGroupController.joinGroup);
