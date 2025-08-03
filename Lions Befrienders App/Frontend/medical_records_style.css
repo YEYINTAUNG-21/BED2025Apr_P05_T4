@@ -41,3 +41,36 @@ body {
 .modal-header.bg-success {
   background-color: #28a745 !important;
 }
+
+
+.custom-navbar {
+  background-color: #a1df8b !important;
+  border-bottom: 2px solid #4b6f3b;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+
+.logo {
+  height: 45px;
+  width: auto;
+}
+
+.profile-img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#links a {
+  color: #0b0b0b !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 8px 12px;
+}
+
+#links a:hover {
+  color: #3a6d12 !important;
+} 

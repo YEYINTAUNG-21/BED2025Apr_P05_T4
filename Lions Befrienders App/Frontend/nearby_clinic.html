@@ -21,26 +21,30 @@
   ></script>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg bg-light border-bottom">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-        <img src="Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo" height="40">
-        <span class="fw-bold fs-4">Nearby Clinics</span>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+      
+      <a href="index.html" class="d-flex align-items-center">
+        <img src="Images/Lion_Befrienders_Logo.png" class="logo me-3" alt="Lion Befrienders Logo" />
       </a>
-      <div class="d-flex align-items-center gap-4 me-2">
-        <a class="nav-link" href="#">Home</a>
-        <a class="nav-link" href="#">About</a>
-        <a class="nav-link" href="#">Help</a>
-        <a class="nav-link" href="#">Contact</a>
-        <span class="nav-link fw-bold">👤</span>
+
+      <div id="links" class="d-flex justify-content-center gap-4 flex-grow-1">
+        <a class="nav-link fw-semibold" href="doctor.html">Doctors</a>
+        <a class="nav-link fw-semibold" href="appointment.html">Appointments</a>
       </div>
+
+      <div class="profile-icon d-flex align-items-center">
+        <img src="Images/Login_User_Avatar.png" alt="Profile Icon" class="profile-img" />
+      </div>
+
     </div>
   </nav>
 
-  <h1 class="mt-4">Nearby Clinics</h1>
-  <div id="map"></div>
-
-  <button onclick="toggleFavorites()">Show Favorites</button>
+  <h1 class="mt-4 title-heading">Nearby Clinics</h1>
+   <div class="map-container mx-auto">
+    <div id="map"></div>
+  </div>
+  <button class="btn btn-show-favorites" onclick="toggleFavorites()">Show Favorites</button>
 
   <div id="favorites-popup" class="popup hidden">
     <h3>Favorited Clinics</h3>

@@ -63,7 +63,36 @@ body {
   resize: vertical;
 }
 
-/* Optional Toast Animation After Save */
-textarea.bg-success {
-  transition: background-color 0.4s ease, color 0.4s ease;
+/* Navbar */
+.custom-navbar {
+  background-color: #a1df8b !important;
+  border-bottom: 2px solid #4b6f3b;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Logo and Profile */
+.logo {
+  height: 45px;
+  width: auto;
+}
+
+.profile-img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Navbar links */
+#links a {
+  color: #0b0b0b !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 8px 12px;
+}
+
+#links a:hover {
+  color: #3a6d12 !important;
 }

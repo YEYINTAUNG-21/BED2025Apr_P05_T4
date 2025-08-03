@@ -110,3 +110,79 @@ button:hover {
   color: #0b0b0b !important;
   font-weight: 600;
 }
+/* Navbar */
+.custom-navbar {
+  background-color: #a1df8b !important;
+  border-bottom: 2px solid #4b6f3b;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Logo and Profile */
+.logo {
+  height: 45px;
+  width: auto;
+}
+
+.profile-img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Navbar links */
+#links a {
+  color: #0b0b0b !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 8px 12px;
+}
+
+#links a:hover {
+  color: #3a6d12 !important;
+}
+
+/* Page Title */
+.title-heading {
+  font-family: "Segoe UI", sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+/* Map Styling */
+.map-container {
+  max-width: 90%;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#map {
+  width: 100%;
+  height: 60vh;
+}
+
+
+.btn-show-favorites {
+  background-color: #4b6f3b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-show-favorites:hover {
+  background-color: #35512b;
+  transform: scale(1.03);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
