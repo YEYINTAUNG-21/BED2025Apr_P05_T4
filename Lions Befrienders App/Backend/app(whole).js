@@ -5,19 +5,35 @@ const path = require('path');
 const multer = require('multer');
 const cors = require('cors');
 const axios = require("axios");
-
+const Joi = require('joi');
+const xss = require('xss');
+const nodemailer = require('nodemailer');
+const mssql = require('mssql');
+const bodyParser = require('body-parser');
 dotenv.config();
 const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   server: process.env.DB_SERVER,
   database: process.env.DB_DATABASE,
+  port: parseInt(process.env.DB_PORT, 10),
   options: {
     encrypt: true,
     trustServerCertificate: true
   }
 };
 
+const dbConfig = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
+  port: parseInt(process.env.DB_PORT, 10),
+  options: {
+    encrypt: true,
+    trustServerCertificate: true
+  }
+};
 // SignUp_Login
 const userController = require('./SignUp_Login/Controllers/UserController');
 const validateInput = require('./SignUp_Login/Middleware/ValidateInput');
@@ -230,5 +246,82 @@ app.get("/api/sudoku/session/:username", async (req, res) => {
   } catch (err) {
     console.error("DB Load Error:", err);
     res.status(500).json({ error: "Failed to load session." });
+  }
+});
+
+// ✅ Contact Us Form
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+// Serve contact form HTML
+app.get("/contact", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/html/contact.html"));
+});
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.post("/submit", async (req, res) => {
+  const { email, subject, description } = req.body;
+
+  const sanitizedEmail = xss(email);
+  const sanitizedSubject = xss(subject);
+  const sanitizedDescription = xss(description);
+
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    subject: Joi.string().min(1).max(255).required(),
+    description: Joi.string().min(1).required()
+  });
+
+  const { error } = schema.validate({
+    email: sanitizedEmail,
+    subject: sanitizedSubject,
+    description: sanitizedDescription
+  });
+
+  if (error) {
+    return res.status(400).send(`Invalid input: ${error.details[0].message}`);
+  }
+
+  try {
+    await mssql.connect(dbConfig);
+    await mssql.query(`
+      INSERT INTO SurveyResponses (email, subject, description)
+      VALUES ('${sanitizedEmail}', '${sanitizedSubject}', '${sanitizedDescription}')
+    `);
+
+    const mailOptions = {
+      from: process.env.SMTP_USER,
+      to: sanitizedEmail,
+      subject: 'Thank you for contacting us!',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; max-width: 600px; margin: 0 auto;">
+          <img src="cid:logo" alt="Logo" style="width: 300px; display: block; margin: 0 auto;" />
+          <h1>Thank you for contacting us!</h1>
+          <p>Subject: ${sanitizedSubject}</p>
+          <p>Description: ${sanitizedDescription}</p>
+          <p>Submitted At: ${new Date().toLocaleString()}</p>
+        </div>
+      `,
+      attachments: [
+        {
+          filename: 'logo.jpeg',
+          path: path.join(__dirname, 'images/logo.jpeg'),
+          cid: 'logo'
+        }
+      ]
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.send('Thank you for your submission! A receipt has been sent to your email.');
+    res.redirect('/frontend/html/index.html');
+
+  } catch (err) {
+    console.error("Error submitting form:", err);
+    res.status(500).send("Something went wrong. Please try again.");
   }
 });
