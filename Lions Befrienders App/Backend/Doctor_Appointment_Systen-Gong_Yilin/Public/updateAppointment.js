@@ -56,7 +56,7 @@ function showMessage(message, type) {
 async function fetchDoctorDetails(doctorId) {
     try {
         // Corrected API path
-        const response = await fetch(`${apiBaseUrl}/doctor/${doctorId}`);
+        const response = await fetch(`${apiBaseUrl}/api/doctor/${doctorId}`);
         if (!response.ok) {
             const errorBody = response.headers
                 .get("content-type")
@@ -69,7 +69,7 @@ async function fetchDoctorDetails(doctorId) {
         const doctor = await response.json();
 
         if (doctor) {
-            doctorImg.src = `Images/${doctor.image_path}`;
+            doctorImg.src = `Images/Doctors/${doctor.image_path}`;
             doctorImg.alt = doctor.doctor_name;
             doctorName.textContent = doctor.doctor_name;
             doctorDetails.textContent = `Years of Experience: ${doctor.years_of_experience} | Clinic: ${doctor.clinic_address || 'N/A'}`;
@@ -113,7 +113,7 @@ async function fetchAndDisplayTimeSlots() {
 
     try {
         // Corrected API path
-        const response = await fetch(`${apiBaseUrl}/doctor-availability/${currentDoctorId}/${selectedDate}/slots`);
+        const response = await fetch(`${apiBaseUrl}/api/doctor-availability/${currentDoctorId}/${selectedDate}/slots`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // 1. Fetch the specific appointment details
         // Corrected API path
-        const appointmentResponse = await fetch(`${apiBaseUrl}/appointment/${currentAppointmentId}`);
+        const appointmentResponse = await fetch(`${apiBaseUrl}/api/appointment/${currentAppointmentId}`);
         if (!appointmentResponse.ok) {
             throw new Error(`Failed to fetch appointment details: HTTP ${appointmentResponse.status}`);
         }

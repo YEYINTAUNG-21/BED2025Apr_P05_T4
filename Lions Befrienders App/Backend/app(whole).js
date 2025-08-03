@@ -49,6 +49,12 @@ const validateEvent = require('./Virtual_Event_YE_YINT_AUNG/Middlewares/validate
 const communityPostController = require('./Community_Post_YE_YINT_AUNG/Controllers/CommunityPostController');
 const uploadCloudinary = require('./Community_Post_YE_YINT_AUNG/Middlewares/CloudinaryUpload');
 
+//Doctor
+const DoctorController = require('./Doctor_Appointment_Systen-Gong_Yilin/Controllers/DoctorController');
+
+//Appointment
+const AppointmentController = require('./Doctor_Appointment_Systen-Gong_Yilin/Controllers/AppointmentController');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -103,6 +109,22 @@ app.put('/api/posts/:post_id',
 app.delete('/api/posts/:post_id', verifyJWT(['user']), communityPostController.deletePost);
 app.get('/api/posts-likes', verifyJWT(['user']), communityPostController.getPostLikes);
 app.post('/api/posts/:post_id/like', verifyJWT(['user']), communityPostController.toggleLike);
+
+//Doctors routes
+app.get("/api/doctors", DoctorController.getAllDoctors); 
+app.get("/api/doctor/:id", DoctorController.getDoctorById);
+
+app.get("/api/availability/:id",DoctorController.getAvailbilityByDoctorId);
+app.get("/api/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
+//Appointment routes
+app.get("/api/appointments", AppointmentController.getAllAppointments); 
+app.get("/api/appointment/:id", AppointmentController.getAppointmentById); 
+app.get("/api/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
+app.get("/api/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
+
+app.post("/api/appointments",AppointmentController.createAppointment);
+app.put("/api/appointments/:id", AppointmentController.updateAppointment); 
+app.delete("/api/appointments/:id",AppointmentController.deleteAppointment);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');

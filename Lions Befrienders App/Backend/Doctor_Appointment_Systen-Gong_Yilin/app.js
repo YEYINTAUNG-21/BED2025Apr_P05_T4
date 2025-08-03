@@ -32,20 +32,20 @@ app.get("/api/users/:id", userController.getUserById); // Get user by ID
 app.get("/users/email/:email", userController.getUserByEmail); // Get user by Email
 app.delete("/users/:id", userController.deleteUserAccount); // Delete user
 
-app.get("/doctors", DoctorController.getAllDoctors); 
-app.get("/doctor/:id", DoctorController.getDoctorById); 
+app.get("/api/doctors", DoctorController.getAllDoctors); 
+app.get("/api/doctor/:id", DoctorController.getDoctorById); 
  
 
 app.get("/api/appointments", AppointmentController.getAllAppointments); 
-app.get("/appointment/:id", AppointmentController.getAppointmentById); 
+app.get("/api/appointment/:id", AppointmentController.getAppointmentById); 
 app.get("/api/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
 app.post("/api/appointments",AppointmentController.createAppointment);
 app.put("/api/appointments/:id", AppointmentController.updateAppointment); 
 app.delete("/api/appointments/:id",AppointmentController.deleteAppointment);
 
-app.get("/availability/:id",DoctorController.getAvailbilityByDoctorId);
-app.get("/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
-app.get("/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
+app.get("/api/availability/:id",DoctorController.getAvailbilityByDoctorId);
+app.get("/api/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
+app.get("/api/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
