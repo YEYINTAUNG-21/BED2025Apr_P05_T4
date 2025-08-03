@@ -47,7 +47,7 @@ function showMessage(message, type) {
 // Function to fetch and display the doctor details
 async function fetchDoctorDetails(doctorId) {
     try {
-        const response = await fetch(`${apiBaseUrl}/doctor/${doctorId}`); // Corrected API path
+        const response = await fetch(`${apiBaseUrl}/api/doctor/${doctorId}`); // Corrected API path
         if (!response.ok) {
             const errorBody = response.headers
                 .get("content-type")
@@ -60,7 +60,7 @@ async function fetchDoctorDetails(doctorId) {
         const doctor = await response.json();
 
         if (doctor) {
-            doctorImg.src = `Images/${doctor.image_path}`;
+            doctorImg.src = `Images/Doctors/${doctor.image_path}`;
             doctorImg.alt = doctor.doctor_name;
             doctorName.textContent = doctor.doctor_name;
             doctorDetails.textContent = `Years of Experience: ${doctor.years_of_experience} | Clinic: ${doctor.clinic_address || 'N/A'}`;
@@ -115,7 +115,7 @@ async function fetchAndDisplayTimeSlots() {
     loadingSlots.classList.remove('hidden');
 
     try {
-        const response = await fetch(`${apiBaseUrl}/doctor-availability/${currentDoctorId}/${selectedDate}/slots`); // Corrected API path
+        const response = await fetch(`${apiBaseUrl}/api/doctor-availability/${currentDoctorId}/${selectedDate}/slots`); // Corrected API path
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

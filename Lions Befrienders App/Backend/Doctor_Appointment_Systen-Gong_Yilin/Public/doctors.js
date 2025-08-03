@@ -8,7 +8,7 @@ async function fetchDoctors() {
     doctorsListDiv.innerHTML = "Loading doctors...";
     messageDiv.textContent = "";
 
-    const response = await fetch(`${apiBaseUrl}/doctors`);
+    const response = await fetch(`${apiBaseUrl}/api/doctors`);
 
     if (!response.ok) {
       const errorBody = response.headers.get("content-type")?.includes("application/json")
@@ -28,12 +28,12 @@ async function fetchDoctors() {
         doctorElement.classList.add("doctor-item");
 
         doctorElement.innerHTML = `
-          <img src="Images/${doctor.image_path}" alt="${doctor.doctor_name}" class="doctor-img"/>
+          <img src="Images/Doctors/${doctor.image_path}" alt="${doctor.doctor_name}" class="doctor-img"/>
           <div class="doctor-info">
             <h3>${doctor.doctor_name}</h3>
             <p><strong>Experience:</strong> ${doctor.years_of_experience} years</p>
             <p><strong>Clinic:</strong> ${doctor.clinic_address}</p>
-            <p><strong>Language:</strong> ${doctor.second_language}</p>
+            <p><strong>Second Language:</strong> ${doctor.second_language}</p>
             <p><strong>Bio:</strong> ${doctor.bio}</p>
             
           </div>

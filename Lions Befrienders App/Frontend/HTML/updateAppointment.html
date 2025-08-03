@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Appointment</title>
+    <link rel="stylesheet" href="../CSS/updateAppointment.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+   
+</head>
+<header class="header">
+    <a href="index.html">
+  <img src="../Images/Lion_Befrienders_Logo.png" class="logo" alt="Lion Befrienders Logo" />
+    </a>
+    <div id="links">
+      <a href="doctor.html">Doctors</a>
+      <a href="appointment.html">Appointments</a>
+
+    </div>
+    <div class="profile-icon">
+      <img src="../Images/Login_User_Avatar.png" alt="Profile Icon" />
+    </div>
+  </header>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Update Appointment</h1>
+
+        <!-- Doctor Info Section (Read-only) -->
+        <div id="doctor-info" class="doctor-info">
+            <img id="doctor-img" src="" alt="Doctor Image" class="doctor-img" onerror="this.onerror=null;this.src='https://placehold.co/96x96/cccccc/000000?text=No+Image';">
+            <div>
+                <h2 id="doctor-name" class="text-2xl font-semibold text-gray-900"></h2>
+                <p id="doctor-details" class="text-blue-700"></p>
+            </div>
+        </div>
+
+        <!-- Current Appointment Date/Time (Display Only) -->
+        <div class="form-group">
+            <label>Current Appointment:</label>
+            <p id="current-appointment-display" class="text-gray-700 font-medium"></p>
+        </div>
+
+        <!-- Date Selection -->
+        <div class="form-group">
+            <label for="appointment-date">Select New Date:</label>
+            <input type="date" id="appointment-date" class="form-control" min="">
+        </div>
+
+        <!-- Available Time Slots -->
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Available Time Slots:</h3>
+        <div id="loading-slots" class="text-center text-gray-600 hidden">Loading slots...</div>
+        <div id="no-slots-message" class="text-center text-gray-600 hidden">Please select a date to view availability.</div>
+        <div id="time-slots-container" class="time-slot-grid">
+            <!-- Time slots will be loaded here by JavaScript -->
+        </div>
+        <div id="slot-selection-message" class="text-center text-red-500 mt-4 hidden">Please select a time slot.</div>
+
+        <!-- Appointment Form -->
+        <form id="appointment-form" class="mt-8">
+            <div class="form-group">
+                <label for="reason">Reason for Appointment:</label>
+                <textarea id="reason" rows="4" class="form-control" placeholder="Briefly describe the reason for your visit..." required></textarea>
+            </div>
+
+            <!-- Hidden inputs for data -->
+            <input type="hidden" id="appointment-id">
+            <input type="hidden" id="doctor-id">
+            <input type="hidden" id="user-id">
+            <input type="hidden" id="selected-slot-time">
+
+            <button type="submit" id="submit-btn" class="btn-submit">Save Changes</button>
+        </form>
+
+        <!-- Message Box for feedback -->
+        <div id="message-box" class="message-box hidden"></div>
+    </div>
+
+    <script src="../JS/updateAppointment.js"></script>
+</body>
+</html>
+

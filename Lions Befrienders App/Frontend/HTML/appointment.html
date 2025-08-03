@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Appointments</title>
+     <link rel="stylesheet" href="../CSS/appointment.css">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        
+    </style>
+</head>
+<header class="header">
+    <a href="index.html">
+  <img src="../Images/Lion_Befrienders_Logo.png" class="logo" alt="Lion Befrienders Logo" />
+    </a>
+    <div id="links">
+      <a href="doctor.html">Doctors</a>
+      <a href="appointment.html">Appointments</a>
+
+    </div>
+    <div class="profile-icon">
+      <img src="../Images/Login_User_Avatar.png" alt="Profile Icon" />
+    </div>
+  </header>
+<body>
+    <div class="container">
+        <h1 class="text-5xl font-bold text-center text-gray-800 mb-6">Your Appointments</h1>
+        <p id="user-info-display" class="text-center text-gray-600 mb-4"></p>
+        <div id="appointments-list">
+            <p class="loading-message">Loading your appointments...</p>
+        </div>
+        <div id="message-box" class="message-box hidden"></div>
+    </div>
+
+    <script src="../JS/appointment.js"></script>
+</body>
+</html>

@@ -12,6 +12,32 @@ body {
   padding: 10px 40px;
   border-bottom: 1px solid #ccc;
 }
+#links a{
+  margin-left: 10px;
+  font-family: "Georgia", serif;
+  /* Color: A warm, earthy brown or green */
+  color: #5d4a3e; /* A rich, soil-like brown */
+  letter-spacing: 0.1em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1vw;
+
+ 
+  transition: transform 0.3s ease-in-out;
+  
+  /* Make the text an inline-block to allow the transform to work properly */
+  display: inline-block;
+}
+#links a:hover,
+#links a:focus {
+  /* Scale the text up by 5% */
+  transform: scale(1.05);
+  
+  /* You can also change the color or other properties for a more pronounced effect */
+  color: #8b6b5a; /* A slightly lighter brown on hover */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
 
 .logo {
   height: auto;
