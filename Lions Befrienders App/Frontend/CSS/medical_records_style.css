@@ -4,12 +4,14 @@ body {
 }
 
 .green-header {
-  background-color: #a1df8b;
-  padding: 1.2rem 2rem;
-  font-size: 1.25rem;
-  font-weight: bold;
   display: flex;
   align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 10px 40px;
+  border-bottom: 1px solid #ccc;
 }
 
 .back-arrow {
