@@ -99,8 +99,6 @@ async function deleteAppointment(req, res) {
     }
 }
 
-<<<<<<< HEAD
-=======
 // Get all booked appointments for that doctor on that specific date
 async function getByDoctorAndDate(req, res) {
     try {
@@ -125,17 +123,12 @@ async function getByDoctorAndDate(req, res) {
     }
 }
 
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 module.exports = {
     getAllAppointments,
     getAppointmentById,
     getAppointmentsByUserId,
     createAppointment,
     updateAppointment,
-<<<<<<< HEAD
-    deleteAppointment
-=======
     deleteAppointment,
     getByDoctorAndDate
->>>>>>> 908467181b20693355f43b0d41e2b6dd05055135
 };

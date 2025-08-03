@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 const JWT_EXPIRES_IN = '1h';
 
@@ -82,7 +83,7 @@ async function signup(req, res) {
 
     // 4. Issue JWT
     const token = jwt.sign(
-      { userId: newUser.user_id, email: newUser.email },
+      { userId: newUser.user_id, email: newUser.email, role: 'user' },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -138,7 +139,11 @@ async function login(req, res) {
     }
 
     const token = jwt.sign(
+<<<<<<< HEAD
       { user_id: User.user_id, email: User.email, role: User.role },
+=======
+      { userId: User.user_id, email: User.email, role : 'user' },
+>>>>>>> 1642c86497f0dd860219acb36293843e16cb7895
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );

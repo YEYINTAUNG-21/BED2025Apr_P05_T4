@@ -42,7 +42,9 @@ async function getUserById(id){
         if (result.recordset.length === 0) {
             return null; // Book not found
         }
-        
+        console.log('Result object from createUser query (after OUTPUT):', JSON.stringify(result, null, 2));
+        console.log('Result recordset (singular):', result.recordset);
+        console.log('Result recordsets (plural):', result.recordsets); // Check this very carefully!
         return result.recordset[0];
     }
     catch(error){
@@ -180,7 +182,11 @@ async function getUserByPhoneNumber(phoneNumber) {
 }
 
 
-
+/**
+ * Deletes a user from the database.
+ * @param {number} userId - The ID of the user to delete.
+ * @returns {Promise<boolean>} True if the user was deleted, false otherwise.
+ */
 async function deleteUser(userId) {
     let connection;
     try {

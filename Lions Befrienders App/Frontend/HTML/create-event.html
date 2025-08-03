@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Virtual Event</title>
+  <link rel="stylesheet" href="../CSS/event.css" />
+</head>
+<body>
+  <div class="create-event-container">
+    <header class="top-header">
+      <a href="../HTML/events.html" class="logo-container">
+        <img src="../Images/Lion_Befrienders_Logo.png" alt="Lion Befrienders Logo" class="logo" />
+      </a>
+      <h1>Create Virtual Event</h1>
+    </header>
+
+    <form id="eventForm" class="form-wrapper">
+      <a href="../HTML/event.html" class="back-button">←</a>
+
+      <label for="title">Event Title</label>
+      <input type="text" id="title" name="title" placeholder="Enter event title" required />
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" placeholder="Enter description" rows="4"></textarea>
+
+      <h3>Scheduled Time</h3>
+      <label for="datetime">Date & Time</label>
+      <input type="datetime-local" id="datetime" name="datetime" required />
+
+      <label for="youtube_link">YouTube Video Link</label>
+      <input type="url" id="youtube_link" name="youtube_link" placeholder="Paste YouTube video link here" required />
+
+      <button type="submit" class="create-btn">Create Event</button>
+      <p id="message"></p>
+    </form>
+  </div>
+
+  <script src="../JS/event.js" defer></script>
+</body>
+</html>
+
+
+

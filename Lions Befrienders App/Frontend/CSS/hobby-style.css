@@ -1,0 +1,361 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+/* Logo container */
+.logo-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.logo {
+  height: 60px;
+}
+
+/* Header title centered */
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Subheading */
+h2 {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #222;
+  text-align: left;
+  padding-left: 20px;
+}
+
+/* Group card grid */
+.group-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.group-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.group-card a:hover {
+  text-decoration: underline;
+}
+
+/* Group card styles */
+.group-card {
+  background-color: #b3f5b3;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.group-card:hover {
+  transform: translateY(-4px);
+}
+
+.group-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.group-card h3 {
+  margin: 10px 0 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.group-card p {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+/* Join button */
+.group-card .join-btn {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.group-card .join-btn:hover {
+  background-color: #555;
+}
+
+.top-bar {
+  position: absolute;
+  top: 23px;
+  right: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.create-btn {
+  margin-top: 10px;
+  padding: 12px 24px;
+  background-color: black;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.create-btn:hover {
+  background-color: #218838;
+}
+
+
+/* Create Hobby Group */
+.create-hobby-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  background-color: #eee;
+  border-radius: 10px;
+  padding: 40px 60px;
+  font-family: Arial, sans-serif;
+}
+
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-header h1 {
+  flex-grow: 1;
+  text-align: center;
+  margin-right: 60px;
+  font-size: 28px;
+}
+
+.back-button {
+  font-size: 24px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  display: inline-block;
+  margin: 20px 0;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.image-upload {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+
+.image-preview {
+  width: 120px;
+  height: 120px;
+  background-color: #222;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.upload-btn {
+  background-color: black;
+  color: white;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+h3 {
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+/* Hobby Detail Page */
+.group-detail {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.group-detail h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.group-detail h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.group-detail .back-button {
+  margin-top: 30px;
+}
+
+.group-img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;        
+  object-position: center;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.members-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.member-list {
+  list-style: none;
+  padding: 0;
+}
+
+.member-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #eef;
+  border-radius: 6px;
+}
+
+.dots-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Modal Styling */
+.modal.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.close {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#leaveButton {
+  background-color: #e74c3c; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#leaveButton:hover {
+  background-color: #c0392b;
+}
+
+#saveNickname {
+  background-color: #3498db; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+
+
+

@@ -11,6 +11,8 @@ const cors = require('cors');
 
 const DoctorController = require('./Controllers/DoctorController');
 const AppointmentController = require('./Controllers/AppointmentController');
+const userController = require('./Controllers/UserController');
+const validateInput = require('./Middleware/ValidateInput');
 //const validateInput = require('./Middleware/ValidateInput');
 
 const app = express();
@@ -23,20 +25,27 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../..', 'Frontend')));
 console.log('Serving static from:', path.join(__dirname, '../..', 'Frontend'));
 
-app.get("/doctors", DoctorController.getAllDoctors); 
-app.get("/doctor/:id", DoctorController.getDoctorById); 
-app.put("/doctor/:id", DoctorController.updateDoctor); 
+app.post('/api/signup', validateInput.validateSignupData, userController.signup);
+app.post('/api/login', validateInput.validateLoginData, userController.login);
+app.get("/api/users", userController.getAllUsers); // Get all users
+app.get("/api/users/:id", userController.getUserById); // Get user by ID
+app.get("/users/email/:email", userController.getUserByEmail); // Get user by Email
+app.delete("/users/:id", userController.deleteUserAccount); // Delete user
 
-app.get("/appointment", AppointmentController.getAllAppointments); 
-app.get("/appointment/:id", AppointmentController.getAppointmentById); 
-app.get("/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
-app.post("/appointment",AppointmentController.createAppointment);
-app.put("/appointment/:id", DoctorController.updateDoctor); 
-app.delete("/appointment/:id",AppointmentController.deleteAppointment);
+app.get("/api/doctors", DoctorController.getAllDoctors); 
+app.get("/api/doctor/:id", DoctorController.getDoctorById); 
+ 
 
-app.get("/availability/:id",DoctorController.getAvailbilityByDoctorId);
-app.get("/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
-app.get("/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
+app.get("/api/appointments", AppointmentController.getAllAppointments); 
+app.get("/api/appointment/:id", AppointmentController.getAppointmentById); 
+app.get("/api/users/:userId/appointments", AppointmentController.getAppointmentsByUserId); 
+app.post("/api/appointments",AppointmentController.createAppointment);
+app.put("/api/appointments/:id", AppointmentController.updateAppointment); 
+app.delete("/api/appointments/:id",AppointmentController.deleteAppointment);
+
+app.get("/api/availability/:id",DoctorController.getAvailbilityByDoctorId);
+app.get("/api/doctorAndDate/:doctorId/:date",AppointmentController.getByDoctorAndDate);
+app.get("/api/doctor-availability/:doctorId/:date/slots",DoctorController.getAvailableSlots);
 
 app.get('/', (req, res) => {
   res.send('Lions Befrienders App backend is running ');
