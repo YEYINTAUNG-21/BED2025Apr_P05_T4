@@ -1,6 +1,6 @@
 const sql = require('mssql');
 const dbConfig = require('../../db_config');
-const Joi = require('joi');
+
 
 async function fetchGroupsWithGroupMemberCount(){
     let connection;
