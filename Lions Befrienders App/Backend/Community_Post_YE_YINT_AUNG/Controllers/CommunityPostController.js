@@ -4,7 +4,7 @@ const PostModel = require('../Models/CommunityPostModel');
 async function getAllPosts(req, res) {
   try {
     const user_id = req.user?.userId || null;
-    const posts = await PostModel.getAllPostsWithLikes(user_id); // 👈 Pass current user
+    const posts = await PostModel.getAllPostsWithLikes(user_id); //  Pass current user
     res.json(posts);
   } catch (error) {
     console.error('Error fetching posts:', error);
