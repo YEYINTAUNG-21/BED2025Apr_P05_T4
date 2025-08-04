@@ -1,14 +1,7 @@
-console.log("ENV:", process.env);
-
 const sql = require('mssql');
 require('dotenv').config();
 
-<<<<<<< HEAD
-
 const config = {
-=======
-const sqlConfig = {
->>>>>>> 1642c86497f0dd860219acb36293843e16cb7895
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   server: process.env.DB_SERVER,
@@ -20,7 +13,7 @@ const sqlConfig = {
   },
 };
 
-const poolPromise = new sql.ConnectionPool(sqlConfig)
+const poolPromise = new sql.ConnectionPool(config)
   .connect()
   .then(pool => {
     console.log('Connected to MSSQL');

@@ -121,6 +121,12 @@ async function login(req, res) {
 
     const User = await UserModel.getUserByEmail(email);
 
+    console.log("[LOGIN] User record:", User);
+    if (!User) {
+        return res.status(401).json({ message: 'Invalid credentials for email' });
+    }
+
+
     if (!User) {
       return res.status(401).json({ message: 'Invalid credentials for email' });
     }
@@ -139,11 +145,7 @@ async function login(req, res) {
     }
 
     const token = jwt.sign(
-<<<<<<< HEAD
       { user_id: User.user_id, email: User.email, role: User.role },
-=======
-      { userId: User.user_id, email: User.email, role : 'user' },
->>>>>>> 1642c86497f0dd860219acb36293843e16cb7895
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );

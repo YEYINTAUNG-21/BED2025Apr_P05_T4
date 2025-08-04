@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config();
+
 require('./Daily_Check-in_Monitoring_For_Staff_Jaylen_Quek/cron/checkMissedCheckins'); // run and register the cron job
 
 const app = express();
