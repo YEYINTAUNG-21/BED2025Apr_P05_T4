@@ -19,7 +19,7 @@ if (signupForm) {
         alert('Signup successful!');
         localStorage.setItem('token', responseData.token);
         localStorage.setItem('loginUser', JSON.stringify(responseData.user));
-        window.location.href = '/login.html';
+        window.location.href = 'Login.html';
       } else {
         alert(responseData.error || responseData.message || 'Signup failed');
       }
