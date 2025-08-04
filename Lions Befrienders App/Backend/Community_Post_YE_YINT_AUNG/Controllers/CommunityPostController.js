@@ -66,7 +66,7 @@ async function updatePost(req, res) {
     if (imageFile) {
       image_url = imageFile.path;
     } else {
-      // 👇 No new image uploaded, so fetch current one
+      //  No new image uploaded, so fetch current one
       const existingPost = await PostModel.getPostById(post_id);
       if (!existingPost || existingPost.user_id !== user_id) {
         return res.status(403).json({ error: 'Unauthorized or post not found.' });
