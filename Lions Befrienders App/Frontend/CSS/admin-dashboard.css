@@ -1,4 +1,4 @@
-/* Reset & Body */
+
 * {
   margin: 0;
   padding: 0;
@@ -47,12 +47,12 @@ body {
 
 /* Navigation button */
 .nav-btn {
-  padding: 10px 20px;
+  padding: 10px 16px;
   background-color: #b30000;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
 }
 
@@ -83,6 +83,7 @@ tbody tr:hover {
   background-color: #f1f1f1;
 }
 
+/* Input Fields */
 input[type="text"] {
   padding: 6px;
   width: 90%;

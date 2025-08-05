@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clinic Finder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+
+  />
+  <link rel="stylesheet" href="../CSS/nearby_clinic_style.css" />
+
+  <script src="../JS/NearbyClinicScript.js" defer></script>
+  <script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMLjNuR6e7RAqMLuNvreMZkaDlj3O_60I&callback=initMap"
+  ></script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+      
+      <a href="index.html" class="d-flex align-items-center">
+        <img src="../Images/Lion_Befrienders_Logo.png" class="logo me-3" alt="Lion Befrienders Logo" />
+      </a>
+
+      <div id="links" class="d-flex justify-content-center gap-4 flex-grow-1">
+        <a class="nav-link fw-semibold" href="doctor.html">Doctors</a>
+        <a class="nav-link fw-semibold" href="appointment.html">Appointments</a>
+      </div>
+
+      <div class="profile-icon d-flex align-items-center">
+        <img src="../Images/Login_User_Avatar.png" alt="Profile Icon" class="profile-img" />
+      </div>
+
+    </div>
+  </nav>
+
+  <h1 class="mt-4 title-heading">Nearby Clinics</h1>
+   <div class="map-container mx-auto">
+    <div id="map"></div>
+  </div>
+  <button class="btn btn-show-favorites" onclick="toggleFavorites()">Show Favorites</button>
+
+  <div id="favorites-popup" class="popup hidden">
+    <h3>Favorited Clinics</h3>
+    <table id="favorites-table" class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Clinic</th>
+          <th>Rating</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn btn-secondary" onclick="toggleFavorites()">Close</button>
+  </div>
+
+  <div id="clinic-popup" class="popup hidden">
+    <button id="close-popup" onclick="closePopup()">×</button>
+    <div id="clinic-popup-content"></div>
+  </div>
+</body>
+</html>
